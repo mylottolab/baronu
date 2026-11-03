@@ -23,8 +23,8 @@
     '.bn-ad.img .t,.bn-ad.img .s{color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}',
     '.bn-ad .ad{position:absolute;top:9px;right:9px;z-index:1;font-size:10px;font-weight:900;padding:2px 6px;border-radius:999px;background:rgba(23,19,43,.6);color:#fff}',
     '.bn-ad.empty{background:transparent;box-shadow:none;border:2px dashed var(--nu-line,#DCD5FA);color:var(--nu-sub,#5F5A7A);align-items:center;justify-content:center;text-align:center}',
-    '.bn-rail{display:none;position:fixed;top:24px;width:190px;flex-direction:column;gap:10px;z-index:1}',
-    '@media (min-width:1000px){.bn-rail{display:flex}.bn-rail .bn-ad{min-height:150px}}'
+    '.bn-rail{display:none !important;position:fixed;top:20px;width:190px;gap:10px;z-index:1}',
+    '@media (min-width:1000px){.bn-rail{display:grid !important}.bn-rail .bn-ad{min-height:118px}}'
   ].join('\n');
   document.head.appendChild(css);
 
@@ -45,36 +45,51 @@
     return '<a class="bn-ad empty" href="mailto:' + CONTACT + '?subject=' + encodeURIComponent('바로너 광고 문의') + '"><span class="t">이 자리에<br>광고하세요</span><span class="s">광고 문의</span></a>';
   }
 
+  /* 광고가 칸보다 많으면 12초마다 다음 광고들로 바꿉니다(전체 순환). 화면을 안 볼 때는 멈춥니다. */
   async function run(){
     var boxes = Array.prototype.slice.call(document.querySelectorAll('.bn-ads'));
     if (!boxes.length) return;
-    /* 넓은 화면: 양옆 여백 */
+    /* 넓은 화면: 양옆 여백에 5칸씩 */
     var host = document.querySelector('.nu');
-    if (host && window.innerWidth >= 1000) {
+    if (host) {
       ['left', 'right'].forEach(function(side){
-        var r = document.createElement('aside'); r.className = 'bn-ads bn-rail'; r.setAttribute('data-n', '3');
+        var r = document.createElement('aside'); r.className = 'bn-ads bn-rail'; r.setAttribute('data-n', '5');
         r.style[side] = 'max(16px, calc(50% - 454px))'; r.style.gridTemplateColumns = '1fr';
         document.body.appendChild(r); boxes.push(r);
       });
     }
     var list = [];
     try { list = (await call('baroka_ads_list', { p_app: 'baronu' })) || []; } catch (e) { list = []; }
-    var seen = {};
-    boxes.forEach(function(box, bi){
-      var want = Number(box.getAttribute('data-n') || 2);
-      var mine = list.length ? list.slice((bi * want) % list.length).concat(list).slice(0, Math.min(want, list.length)) : [];
-      var h = mine.map(function(a){
-        if (!seen[a.id]) { seen[a.id] = 1; call('baroka_ad_hit', { p_id: a.id, p_click: false }).catch(function(){}); }
-        return tile(a);
-      }).join('');
-      for (var i = mine.length; i < Math.min(want, 2); i++) h += empty();
-      box.innerHTML = h;
-      var head = box.previousElementSibling;
-      if (head && head.classList.contains('bn-ads-h')) head.style.display = '';
-      box.querySelectorAll('[data-ad]').forEach(function(el){
-        el.addEventListener('click', function(){ call('baroka_ad_hit', { p_id: el.getAttribute('data-ad'), p_click: true }).catch(function(){}); });
+    var start = list.length ? Math.floor(Math.random() * list.length) : 0, page = 0, timer = null, seen = {};
+    function draw(){
+      var wide = window.innerWidth >= 1000;
+      var vis = boxes.filter(function(b){ return wide || !b.classList.contains('bn-rail'); });
+      var total = vis.reduce(function(n, b){ return n + Number(b.getAttribute('data-n') || 2); }, 0);
+      var k = 0, rotate = list.length > total;
+      vis.forEach(function(box){
+        var n = Number(box.getAttribute('data-n') || 2), h = '', empties = 0;
+        for (var i = 0; i < n; i++, k++) {
+          if (rotate || k < list.length) {
+            var a = list[(start + page * total + k) % list.length];
+            if (!seen[a.id]) { seen[a.id] = 1; call('baroka_ad_hit', { p_id: a.id, p_click: false }).catch(function(){}); }
+            h += tile(a);
+          } else if (empties < (n > 2 ? 1 : 2)) { h += empty(); empties++; }
+        }
+        if (box.innerHTML === h) return;
+        var put = function(){
+          box.innerHTML = h; box.style.opacity = '1';
+          box.querySelectorAll('[data-ad]').forEach(function(el){
+            el.addEventListener('click', function(){ call('baroka_ad_hit', { p_id: el.getAttribute('data-ad'), p_click: true }).catch(function(){}); });
+          });
+        };
+        box.style.transition = 'opacity .35s';
+        if (box.innerHTML) { box.style.opacity = '0'; setTimeout(put, 350); } else put();
       });
-    });
+      clearInterval(timer);
+      if (rotate) timer = setInterval(function(){ if (!document.hidden) { page++; draw(); } }, 12000);
+    }
+    draw();
+    var rt; window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(draw, 300); });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
 })();
