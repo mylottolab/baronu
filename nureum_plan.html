@@ -158,7 +158,8 @@ document.getElementById('borrow').onclick = async function(){
 /* 🔴 2026-10-30 — 앱 결제(구글 · 애플). 상품 번호는 서버(alias-plan-google-verify) · 스토어와 같아야 합니다.
    ⚠ 한 번에 한 종류만 삽니다. 여러 장은 구글 결제창에서 수량으로 고릅니다(아이폰은 한 번에 1장).
    ⚠ 결제 직전에 "어느 핫라인인지" 서버에 적어 둡니다(nureum_buy_intent) — 영수증이 늦게 와도 그 핫라인에 들어가게. */
-var SKU = { m1: 'nureum_line_1m', m12: 'nureum_line_12m', voice: 'nureum_voice_300', video: 'nureum_video_100', storage: 'nureum_storage_1gb' };
+/* 🔴 2026-11-03 바로너 앱은 상품 번호가 baronu_ 로 시작합니다(애플은 앱마다 번호가 달라야 함) */
+var SKU = { m1: 'baronu_line_1m', m12: 'baronu_line_12m', voice: 'baronu_voice_300', video: 'baronu_video_100', storage: 'baronu_storage_1gb' };
 var STORE = !!(window.AliasNative && typeof AliasNative.storeBuy === 'function');
 var buying = false;
 function payDone(r){
