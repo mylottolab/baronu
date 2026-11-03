@@ -1,0 +1,1178 @@
+/* =====================================================================
+   Alias Next-Gen — 공용 모양
+   2026-09-03
+   ⚠ 함정 ⑲ — 이 파일을 고치면 부르는 화면들의 ?v= 도 함께 올리세요.
+   ===================================================================== */
+
+:root{
+  --ink:#0E1621;
+  --raise:#182231;
+  --raise2:#1E2A3B;
+  --line:#27344A;
+  --text:#DDE5F0;
+  --dim:#7E8FA6;
+  --faint:#586A82;
+  --steel:#5B8FC7;
+  --paper:#F2E9D6;
+  --paper-ink:#2A2418;
+  --bad:#D96A6A;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--ink);}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  min-height:100dvh;
+  padding:24px 20px 60px;
+}
+body.center{display:flex;align-items:center;justify-content:center;padding-bottom:24px;}
+.wrap{width:100%;max-width:400px;margin:0 auto;}
+
+/* ── 머리 ──────────────────────────────────────────────────────── */
+.top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px;}
+.mark{font-size:31px;font-weight:600;letter-spacing:-0.02em;margin:0;}
+.h2{font-size:21px;font-weight:600;margin:0 0 8px;}
+.lede{font-size:13.5px;color:var(--dim);margin:0 0 26px;line-height:1.65;white-space:pre-line;}
+.linkish{
+  background:none;border:none;padding:0;cursor:pointer;font-family:inherit;
+  font-size:13px;color:var(--dim);text-decoration:underline;text-underline-offset:3px;
+}
+.linkish:hover{color:var(--text);}
+
+/* ── 이동 ──────────────────────────────────────────────────────── */
+.nav{display:flex;gap:6px;margin:0 0 26px;flex-wrap:wrap;}
+.nav a{
+  padding:8px 13px;font-size:13px;text-decoration:none;
+  color:var(--dim);background:var(--raise);
+  border:1px solid var(--line);border-radius:8px;
+}
+.nav a.on{color:var(--text);border-color:var(--steel);}
+.nav a:hover{color:var(--text);}
+
+/* ── 입력 ──────────────────────────────────────────────────────── */
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:12.5px;color:var(--dim);margin-bottom:7px;}
+.field input,.field select,.field textarea{
+  width:100%;padding:14px 15px;font-size:16px;
+  background:var(--raise);color:var(--text);
+  border:1px solid var(--line);border-radius:10px;font-family:inherit;
+}
+.field textarea{min-height:74px;resize:vertical;line-height:1.5;}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:2px solid var(--steel);outline-offset:1px;border-color:transparent;
+}
+.field input::placeholder,.field textarea::placeholder{color:#4E5D73;}
+.hint{font-size:12px;color:var(--dim);margin-top:7px;line-height:1.55;white-space:pre-line;}
+
+.btn{
+  width:100%;padding:15px;margin-top:10px;
+  font-size:15.5px;font-weight:600;font-family:inherit;
+  background:var(--steel);color:#08101B;
+  border:none;border-radius:10px;cursor:pointer;
+}
+.btn:disabled{opacity:.5;cursor:default;}
+.btn:focus-visible{outline:2px solid var(--paper);outline-offset:2px;}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line);}
+.btn.small{width:auto;padding:9px 15px;font-size:13.5px;margin-top:0;}
+
+.note{font-size:12.5px;color:var(--dim);margin-top:18px;line-height:1.65;text-align:center;white-space:pre-line;}
+.err{
+  display:none;margin-top:14px;padding:12px 14px;
+  background:rgba(217,106,106,.1);border:1px solid rgba(217,106,106,.35);
+  border-radius:9px;font-size:13px;color:#EFAAAA;line-height:1.55;white-space:pre-line;
+}
+.err.show{display:block;}
+.ok{
+  display:none;margin-top:14px;padding:12px 14px;
+  background:rgba(91,143,199,.12);border:1px solid rgba(91,143,199,.4);
+  border-radius:9px;font-size:13px;color:#A9C8E8;line-height:1.55;white-space:pre-line;
+}
+.ok.show{display:block;}
+
+/* ── 종이: 손으로 옮겨 적는 것만 여기 담습니다 ──────────────────── */
+.paper{
+  background:var(--paper);color:var(--paper-ink);
+  border-radius:12px;padding:26px 22px 22px;
+  box-shadow:0 14px 40px rgba(0,0,0,.45);
+}
+.paper .cap{font-size:12px;color:#7A6E56;margin-bottom:14px;}
+.code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:24px;font-weight:600;letter-spacing:.12em;
+  line-height:1.55;word-break:break-all;
+}
+.code.small{font-size:17px;letter-spacing:.08em;}
+.paper .warns{margin-top:18px;padding-top:16px;border-top:1px solid rgba(42,36,24,.18);}
+.paper .warns p{margin:0 0 7px;font-size:12.5px;line-height:1.6;color:#4A4030;}
+.paper .warns p:last-child{margin-bottom:0;}
+
+.copybar{display:flex;gap:9px;margin-top:16px;}
+.copybar button{
+  flex:1;padding:12px;font-size:13.5px;font-family:inherit;
+  background:transparent;color:var(--text);
+  border:1px solid var(--line);border-radius:9px;cursor:pointer;
+}
+.ack{
+  display:flex;gap:11px;align-items:flex-start;
+  margin-top:22px;padding:14px;
+  border:1px solid var(--line);border-radius:10px;cursor:pointer;
+}
+.ack input{margin:2px 0 0;width:17px;height:17px;flex-shrink:0;accent-color:var(--steel);}
+.ack span{font-size:13.5px;line-height:1.55;}
+
+/* ── 목록 ──────────────────────────────────────────────────────── */
+.list{margin:0;padding:0;list-style:none;}
+.row{
+  padding:15px 16px;margin-bottom:9px;
+  background:var(--raise);border:1px solid var(--line);border-radius:11px;
+}
+.row.dim{opacity:.5;}
+.row-main{display:flex;align-items:baseline;justify-content:space-between;gap:12px;}
+.row-name{font-size:15.5px;font-weight:600;}
+.row-sub{font-size:12.5px;color:var(--dim);margin-top:5px;line-height:1.55;}
+
+/* 이름마다 그것이 누구 것인지 밝히는 줄 */
+.row-cap{font-size:11.5px;color:var(--faint);margin-top:4px;}
+.facts{margin:12px 0 0;padding:11px 0 0;border-top:1px solid var(--line);
+       display:grid;grid-template-columns:auto 1fr;gap:5px 14px;font-size:12.5px;}
+.facts dt{color:var(--faint);white-space:nowrap;}
+.facts dd{margin:0;color:var(--text);}
+
+.legend{margin:0 0 16px;border:1px solid var(--line);border-radius:10px;background:var(--raise);}
+.legend summary{padding:12px 15px;font-size:13px;color:var(--dim);cursor:pointer;list-style:none;}
+.legend summary::-webkit-details-marker{display:none;}
+.legend summary::before{content:'?';display:inline-block;width:16px;height:16px;
+  margin-right:8px;border:1px solid var(--line);border-radius:50%;
+  text-align:center;line-height:15px;font-size:11px;}
+.legend summary:hover{color:var(--text);}
+.legend p{margin:0;padding:0 15px 14px;font-size:12.5px;color:var(--dim);
+  line-height:1.75;white-space:pre-line;}
+.row-acts{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap;}
+.row-acts button{
+  padding:7px 12px;font-size:12.5px;font-family:inherit;
+  background:transparent;color:var(--dim);
+  border:1px solid var(--line);border-radius:7px;cursor:pointer;
+}
+.row-acts button:hover{color:var(--text);}
+.row-acts .rowlink{
+  padding:7px 12px;font-size:12.5px;text-decoration:none;
+  color:var(--steel);border:1px solid var(--steel);border-radius:7px;
+}
+.row-acts .rowlink:hover{background:rgba(91,143,199,.12);}
+.badge{
+  font-size:11px;padding:3px 8px;border-radius:20px;
+  border:1px solid var(--steel);color:var(--steel);white-space:nowrap;
+}
+.empty{
+  padding:34px 20px;text-align:center;
+  font-size:13.5px;color:var(--dim);line-height:1.7;white-space:pre-line;
+  border:1px dashed var(--line);border-radius:11px;
+}
+.sect{font-size:12.5px;color:var(--faint);margin:30px 0 11px;}
+
+.step{display:none;}
+.step.on{display:block;}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important;transition:none !important;}
+}
+
+/* =====================================================================
+   하단 탭 · 연락처 목록 · 관계 상세 · 시트   (2026-09-04 신설)
+   ===================================================================== */
+
+/* ── 하단 탭 ─────────────────────────────────────────────────────── */
+body.tabbed{padding-bottom:96px;}
+.tabbar{
+  position:fixed;left:0;right:0;bottom:0;z-index:40;
+  display:flex;background:var(--raise);border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.tabbar a{
+  flex:1;padding:13px 4px 15px;text-align:center;text-decoration:none;
+  font-size:12.5px;color:var(--faint);
+}
+.tabbar a.on{color:var(--steel);}
+.tabbar .tb-badge{
+  display:inline-block;min-width:17px;padding:1px 5px;margin-left:5px;
+  background:var(--bad);color:#12181F;border-radius:9px;
+  font-size:10.5px;font-weight:700;vertical-align:1px;
+}
+
+/* ── 머리 + 더하기 ───────────────────────────────────────────────── */
+.tophead{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.plusbtn{
+  width:38px;height:38px;flex-shrink:0;
+  background:var(--steel);color:#08101B;border:none;border-radius:50%;
+  font-size:24px;line-height:1;font-family:inherit;cursor:pointer;
+}
+.plusbtn:focus-visible{outline:2px solid var(--paper);outline-offset:2px;}
+
+/* ── 연락처 한 줄 ────────────────────────────────────────────────── */
+.crow{
+  display:flex;align-items:center;gap:13px;
+  padding:13px 14px;margin-bottom:8px;
+  background:var(--raise);border:1px solid var(--line);border-radius:11px;
+  cursor:pointer;
+}
+.crow:hover{border-color:var(--steel);}
+.cav{
+  width:40px;height:40px;flex-shrink:0;border-radius:50%;
+  background:var(--raise2);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:600;color:var(--steel);
+}
+.cmid{flex:1;min-width:0;}
+.cname{font-size:15.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.csub{font-size:12.5px;color:var(--dim);margin-top:3px;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ctime{font-size:11.5px;color:var(--faint);flex-shrink:0;align-self:flex-start;padding-top:2px;}
+
+/* ── 아래에서 올라오는 시트 ──────────────────────────────────────── */
+.sheet-bg{
+  display:none;position:fixed;inset:0;z-index:50;
+  background:rgba(4,8,14,.72);
+}
+.sheet-bg.show{display:block;}
+.sheet{
+  position:fixed;left:0;right:0;bottom:0;z-index:51;
+  background:var(--raise);border-top:1px solid var(--line);
+  border-radius:16px 16px 0 0;padding:10px 18px 26px;
+  padding-bottom:calc(26px + env(safe-area-inset-bottom));
+}
+.sheet .grip{width:38px;height:4px;background:var(--line);border-radius:2px;margin:0 auto 18px;}
+.sheet a,.sheet button{
+  display:block;width:100%;margin-bottom:9px;padding:15px;
+  font-size:15px;font-family:inherit;text-align:left;text-decoration:none;
+  background:var(--raise2);color:var(--text);
+  border:1px solid var(--line);border-radius:10px;cursor:pointer;
+}
+.sheet a small,.sheet button small{display:block;font-size:12px;color:var(--dim);margin-top:4px;}
+
+/* ── 관계 상세 ───────────────────────────────────────────────────── */
+.backlink{
+  display:inline-block;margin-bottom:16px;font-size:13px;color:var(--dim);
+  text-decoration:none;
+}
+.backlink:hover{color:var(--text);}
+.bighead{text-align:center;padding:8px 0 22px;}
+.bighead .cav{width:62px;height:62px;font-size:22px;margin:0 auto 14px;}
+.bighead h1{font-size:23px;font-weight:600;margin:0 0 5px;}
+.bighead p{font-size:12px;color:var(--faint);margin:0;}
+.dblock{
+  background:var(--raise);border:1px solid var(--line);border-radius:11px;
+  padding:4px 15px;margin-bottom:14px;
+}
+.drow{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:13px 0;border-bottom:1px solid var(--line);
+}
+.drow:last-child{border-bottom:none;}
+.dlab{font-size:12.5px;color:var(--faint);flex-shrink:0;}
+.dval{font-size:14px;text-align:right;word-break:break-all;}
+.drow button{
+  padding:6px 11px;font-size:12px;font-family:inherit;flex-shrink:0;
+  background:transparent;color:var(--steel);
+  border:1px solid var(--line);border-radius:7px;cursor:pointer;
+}
+.bigacts{display:flex;gap:10px;margin-bottom:22px;}
+.bigacts button{
+  flex:1;padding:14px;font-size:15px;font-weight:600;font-family:inherit;
+  background:var(--steel);color:#08101B;border:none;border-radius:10px;cursor:pointer;
+}
+.bigacts button.sec{background:transparent;color:var(--text);border:1px solid var(--line);}
+.danger{
+  width:100%;padding:14px;margin-top:6px;
+  font-size:14px;font-family:inherit;
+  background:transparent;color:var(--bad);
+  border:1px solid rgba(217,106,106,.4);border-radius:10px;cursor:pointer;
+}
+
+/* =====================================================================
+   연락처 도구 — 검색 · 묶기 · 줄 메뉴   (2026-09-04)
+   ===================================================================== */
+
+.tools{display:flex;gap:8px;margin-bottom:14px;}
+.tools input{
+  flex:1;min-width:0;padding:11px 13px;font-size:15px;
+  background:var(--raise);color:var(--text);
+  border:1px solid var(--line);border-radius:10px;font-family:inherit;
+}
+.tools input:focus{outline:2px solid var(--steel);outline-offset:1px;border-color:transparent;}
+.tools input::placeholder{color:#4E5D73;}
+.toggle{
+  flex-shrink:0;padding:11px 14px;font-size:12.5px;font-family:inherit;
+  background:var(--raise);color:var(--dim);
+  border:1px solid var(--line);border-radius:10px;cursor:pointer;white-space:nowrap;
+}
+.toggle.on{color:var(--steel);border-color:var(--steel);}
+
+/* 얼굴별 묶음 머리 */
+.grp{
+  display:flex;align-items:center;gap:9px;
+  margin:22px 0 9px;cursor:pointer;user-select:none;
+}
+.grp:first-child{margin-top:6px;}
+.grp .gav{
+  width:24px;height:24px;flex-shrink:0;border-radius:50%;
+  background:var(--raise2);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:600;color:var(--steel);
+}
+.grp .gname{font-size:13px;color:var(--dim);}
+.grp .gcount{font-size:11.5px;color:var(--faint);}
+.grp .gcaret{margin-left:auto;font-size:11px;color:var(--faint);}
+.grp.closed .gcaret{transform:rotate(-90deg);}
+
+/* 줄 오른쪽 ⋯ */
+.cdots{
+  flex-shrink:0;width:30px;height:30px;padding:0;
+  background:transparent;color:var(--faint);
+  border:none;border-radius:8px;font-size:17px;font-family:inherit;cursor:pointer;
+}
+.cdots:hover{color:var(--text);background:var(--raise2);}
+
+.nores{
+  padding:26px 20px;text-align:center;
+  font-size:13.5px;color:var(--dim);
+}
+
+/* =====================================================================
+   공용 별칭 고르개 — AL.pickAlias()   (2026-09-04)
+   앱 어디서나 같은 모양으로 뜹니다. 관계 상세 · 초대 보내기 · 초대 받기 ·
+   (나중에) 통화 화면까지 이 하나를 씁니다.
+   ===================================================================== */
+
+.pk-bg{position:fixed;inset:0;z-index:60;background:rgba(4,8,14,.72);}
+.pk{
+  position:fixed;left:0;right:0;bottom:0;z-index:61;
+  background:var(--raise);border-top:1px solid var(--line);
+  border-radius:16px 16px 0 0;padding:10px 18px 26px;
+  padding-bottom:calc(26px + env(safe-area-inset-bottom));
+  max-height:80vh;overflow-y:auto;
+}
+.pk .grip{width:38px;height:4px;background:var(--line);border-radius:2px;margin:0 auto 16px;}
+.pk-title{font-size:14px;margin:0 0 4px;}
+.pk-note{font-size:12.5px;color:var(--dim);margin:0 0 16px;line-height:1.6;white-space:pre-line;}
+.pk-opt{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  width:100%;margin-bottom:9px;padding:15px;
+  font-size:15px;font-family:inherit;text-align:left;
+  background:var(--raise2);color:var(--text);
+  border:1px solid var(--line);border-radius:10px;cursor:pointer;
+}
+.pk-opt.cur{border-color:var(--steel);}
+.pk-opt .pk-tick{color:var(--steel);font-size:13px;}
+.pk-sep{height:1px;background:var(--line);margin:16px 0;}
+.pk-new{
+  width:100%;padding:15px;font-size:15px;font-family:inherit;text-align:left;
+  background:transparent;color:var(--steel);
+  border:1px dashed var(--line);border-radius:10px;cursor:pointer;
+}
+.pk-form input{
+  width:100%;padding:14px 15px;font-size:16px;font-family:inherit;
+  background:var(--raise2);color:var(--text);
+  border:1px solid var(--line);border-radius:10px;
+}
+.pk-form input:focus{outline:2px solid var(--steel);outline-offset:1px;border-color:transparent;}
+.pk-form .hint{margin-top:8px;}
+.pk-form .pk-go{
+  width:100%;margin-top:12px;padding:14px;
+  font-size:15px;font-weight:600;font-family:inherit;
+  background:var(--steel);color:#08101B;border:none;border-radius:10px;cursor:pointer;
+}
+.pk-form .pk-go:disabled{opacity:.5;cursor:default;}
+.pk-err{
+  margin-top:12px;padding:11px 13px;
+  background:rgba(217,106,106,.1);border:1px solid rgba(217,106,106,.35);
+  border-radius:9px;font-size:12.5px;color:#EFAAAA;line-height:1.5;white-space:pre-line;
+}
+
+/* =====================================================================
+   대화 화면   (2026-09-04)
+   ===================================================================== */
+
+body.chat{padding:0;height:100dvh;overflow:hidden;display:flex;flex-direction:column;}
+.chat-wrap{width:100%;max-width:560px;margin:0 auto;flex:1;display:flex;flex-direction:column;min-height:0;}
+
+.chat-top{
+  flex-shrink:0;display:flex;align-items:center;gap:11px;
+  padding:12px 16px;background:var(--raise);border-bottom:1px solid var(--line);
+}
+.chat-top .back{
+  background:none;border:none;padding:0 4px 0 0;cursor:pointer;
+  color:var(--dim);font-size:20px;font-family:inherit;line-height:1;
+}
+.chat-top .back:hover{color:var(--text);}
+.chat-who{flex:1;min-width:0;cursor:pointer;}
+.chat-who .n{font-size:15.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.chat-who .f{font-size:11.5px;color:var(--faint);margin-top:2px;}
+.chat-top .icon{
+  flex-shrink:0;width:36px;height:36px;padding:0;
+  background:transparent;color:var(--steel);
+  border:1px solid var(--line);border-radius:50%;
+  font-size:15px;font-family:inherit;cursor:pointer;
+}
+.chat-top .icon:hover{background:var(--raise2);}
+
+.chat-body{flex:1;overflow-y:auto;padding:18px 16px 6px;min-height:0;}
+
+.daysep{text-align:center;margin:18px 0 14px;font-size:11.5px;color:var(--faint);}
+
+.msg{display:flex;margin-bottom:10px;gap:7px;align-items:flex-end;}
+.msg.out{flex-direction:row-reverse;}
+.bub{
+  max-width:74%;padding:10px 13px;border-radius:14px;
+  font-size:14.5px;line-height:1.55;word-break:break-word;white-space:pre-wrap;
+  background:var(--raise);border:1px solid var(--line);
+}
+.msg.out .bub{background:var(--steel);color:#08101B;border-color:transparent;}
+.msg .meta{flex-shrink:0;font-size:10.5px;color:var(--faint);line-height:1.35;text-align:right;}
+.msg.out .meta{text-align:left;}
+.msg .meta .rd{color:var(--steel);display:block;}
+.bub.gone{opacity:.5;font-style:italic;}
+
+.sysline{
+  text-align:center;margin:14px 0;font-size:11.5px;color:var(--faint);
+}
+
+.typing{
+  padding:0 16px 6px;font-size:12px;color:var(--dim);height:20px;flex-shrink:0;
+}
+
+.chat-foot{
+  flex-shrink:0;display:flex;gap:9px;align-items:flex-end;
+  padding:11px 14px;background:var(--raise);border-top:1px solid var(--line);
+  padding-bottom:calc(11px + env(safe-area-inset-bottom));
+}
+.chat-foot textarea{
+  flex:1;min-height:44px;max-height:120px;padding:12px 14px;
+  font-size:15px;font-family:inherit;line-height:1.45;resize:none;
+  background:var(--raise2);color:var(--text);
+  border:1px solid var(--line);border-radius:20px;
+}
+.chat-foot textarea:focus{outline:2px solid var(--steel);outline-offset:1px;border-color:transparent;}
+.chat-foot textarea::placeholder{color:#4E5D73;}
+.chat-foot .send{
+  flex-shrink:0;width:44px;height:44px;padding:0;
+  background:var(--steel);color:#08101B;
+  border:none;border-radius:50%;font-size:17px;font-family:inherit;cursor:pointer;
+}
+.chat-foot .send:disabled{opacity:.4;cursor:default;}
+
+.chat-err{
+  margin:0 16px 8px;padding:10px 13px;
+  background:rgba(217,106,106,.1);border:1px solid rgba(217,106,106,.35);
+  border-radius:9px;font-size:12.5px;color:#EFAAAA;line-height:1.5;white-space:pre-line;
+}
+
+/* ── 새 메시지 표시 (2026-09-04) ─────────────────────────────────── */
+.newline{
+  display:flex;align-items:center;gap:10px;
+  margin:16px 0 12px;font-size:11.5px;color:var(--steel);
+}
+.newline::before,.newline::after{
+  content:'';flex:1;height:1px;background:var(--steel);opacity:.45;
+}
+@keyframes freshglow{
+  from{background:rgba(91,143,199,.22);}
+  to{background:var(--raise);}
+}
+.msg.fresh .bub{animation:freshglow 2.4s ease-out;}
+
+/* ── 안 읽은 개수 ────────────────────────────────────────────────── */
+.unread{
+  flex-shrink:0;min-width:20px;padding:2px 7px;margin-left:7px;
+  background:var(--steel);color:#08101B;border-radius:10px;
+  font-size:11px;font-weight:700;text-align:center;
+}
+.crow.hasnew .cname{color:var(--text);}
+.crow.hasnew{border-color:var(--steel);}
+
+/* ── 설정 줄 ─────────────────────────────────────────────────────── */
+.prefrow{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px 0;border-bottom:1px solid var(--line);
+}
+.prefrow:last-child{border-bottom:none;}
+.prefrow .pl{font-size:14px;}
+.prefrow button{
+  padding:7px 15px;font-size:12.5px;font-family:inherit;
+  background:transparent;color:var(--dim);
+  border:1px solid var(--line);border-radius:16px;cursor:pointer;min-width:56px;
+}
+.prefrow button.on{color:var(--steel);border-color:var(--steel);}
+
+/* 보내지 못한 말풍선 — 소리 없이 사라지지 않게 */
+.msg.failed .bub{opacity:.55;border:1px dashed var(--bad);background:transparent;color:var(--text);}
+.msg.failed .meta{color:var(--bad);}
+.msg .retry{
+  display:block;margin-bottom:2px;padding:2px 8px;
+  background:transparent;color:var(--bad);
+  border:1px solid var(--bad);border-radius:6px;
+  font-size:10.5px;font-family:inherit;cursor:pointer;
+}
+
+/* =====================================================================
+   말풍선 속 파일   (2026-09-05)
+   ===================================================================== */
+.bub.media{ padding:5px; max-width:78%; overflow:hidden; }
+.bub.media img.ph{
+  display:block; width:100%; height:auto; border-radius:10px;
+  cursor:zoom-in; background:var(--raise2);
+}
+.bub.media video{ display:block; width:100%; border-radius:10px; background:#000; }
+.bub.media .cap{
+  padding:7px 8px 4px; font-size:14px; line-height:1.5; white-space:pre-wrap;
+}
+.filecard{
+  display:flex; align-items:center; gap:11px;
+  padding:11px 13px; text-decoration:none; color:inherit;
+}
+.filecard .fi{
+  width:34px; height:34px; flex-shrink:0; border-radius:8px;
+  background:var(--raise2); color:var(--steel);
+  display:flex; align-items:center; justify-content:center; font-size:15px;
+}
+.filecard .fn{ flex:1; min-width:0; }
+.filecard .fn b{
+  display:block; font-size:13.5px; font-weight:600;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.filecard .fn span{ font-size:11.5px; opacity:.7; }
+
+/* 올리는 동안 */
+.uploading{
+  padding:8px 16px; font-size:12.5px; color:var(--dim);
+  border-top:1px solid var(--line); background:var(--raise);
+}
+
+/* 붙이기 단추 */
+.chat-foot .clip{
+  flex-shrink:0; width:44px; height:44px; padding:0;
+  background:transparent; color:var(--dim);
+  border:1px solid var(--line); border-radius:50%;
+  font-size:18px; font-family:inherit; cursor:pointer;
+}
+.chat-foot .clip:hover{ color:var(--text); }
+
+/* =====================================================================
+   사진 크게 보기
+   ===================================================================== */
+.vw-bg{
+  position:fixed; inset:0; z-index:80; background:rgba(0,0,0,.92);
+  display:flex; align-items:center; justify-content:center;
+}
+.vw-bar{
+  position:absolute; top:0; left:0; right:0; z-index:2;
+  display:flex; align-items:center; gap:9px;
+  padding:14px 16px;
+  padding-top:calc(14px + env(safe-area-inset-top));
+}
+.vw-count{
+  flex:1; color:#fff; font-size:12px; opacity:.8;
+}
+.vw-btn{
+  width:36px; height:36px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.14); color:#fff;
+  border:none; border-radius:50%;
+  font-size:16px; font-family:inherit; text-decoration:none; cursor:pointer;
+}
+.vw-port{
+  width:100%; height:100%; max-height:88vh;
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden; touch-action:none;
+}
+.vw-img{
+  max-width:100%; max-height:88vh; border-radius:8px;
+  cursor:zoom-in; user-select:none; -webkit-user-select:none;
+}
+.vw-img.zoomed{ cursor:grab; }
+.vw-hint{
+  position:absolute; bottom:16px; left:0; right:0; z-index:2;
+  text-align:center; font-size:11px; color:rgba(255,255,255,.55);
+  pointer-events:none;
+}
+.vw-nav{
+  position:absolute; top:50%; transform:translateY(-50%); z-index:2;
+  width:42px; height:42px;
+  background:rgba(0,0,0,.4); color:#fff;
+  border:none; border-radius:50%; font-size:21px; cursor:pointer;
+}
+.vw-prev{ left:10px; }
+.vw-next{ right:10px; }
+.vw-nav:disabled{ opacity:.22; cursor:default; }
+
+/* =====================================================================
+   4-3 — 이모지 · 음성 · 답장 · 검색   (2026-09-05)
+   ===================================================================== */
+
+/* 이모지 패널 */
+.empanel{
+  display:none; flex-shrink:0; height:274px; overflow:hidden;
+  background:var(--raise); border-top:1px solid var(--line);
+  flex-direction:column;
+}
+.empanel.on{ display:flex; }
+.em-tabs{
+  display:flex; gap:2px; padding:7px 9px; overflow-x:auto;
+  border-bottom:1px solid var(--line); flex-shrink:0;
+}
+.em-tab{
+  flex-shrink:0; width:36px; height:34px;
+  background:transparent; border:none; border-radius:8px;
+  font-size:18px; cursor:pointer; opacity:.55;
+}
+.em-tab.on{ opacity:1; background:var(--raise2); }
+.em-grid{
+  flex:1; overflow-y:auto; padding:9px;
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(44px, 1fr)); gap:3px;
+}
+.em-btn{
+  width:100%; aspect-ratio:1; padding:4px;
+  background:transparent; border:none; border-radius:8px;
+  font-size:22px; cursor:pointer;
+}
+.em-btn:hover{ background:var(--raise2); }
+.em-btn img{ width:100%; height:100%; object-fit:contain; }
+.em-credit{
+  flex-shrink:0; padding:6px 10px; font-size:10px;
+  color:var(--faint); text-align:center; border-top:1px solid var(--line);
+}
+
+/* 이모지만 있는 메시지는 크게 */
+.bub.stickers{
+  background:transparent !important; border:none !important; padding:2px 0 !important;
+  display:flex; gap:4px;
+}
+.bub.stickers img{ width:64px; height:64px; }
+
+/* 답장 */
+.replybar{
+  display:none; flex-shrink:0; align-items:center; gap:10px;
+  padding:9px 15px; background:var(--raise2); border-top:1px solid var(--line);
+}
+.replybar.on{ display:flex; }
+.replybar .rb-txt{ flex:1; min-width:0; font-size:12.5px; color:var(--dim); }
+.replybar .rb-txt b{ display:block; color:var(--steel); font-size:11px; margin-bottom:2px; }
+.replybar .rb-txt span{
+  display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.replybar .rb-x{
+  flex-shrink:0; background:none; border:none; color:var(--dim);
+  font-size:16px; cursor:pointer; font-family:inherit;
+}
+.quote{
+  display:block; margin:-2px -4px 6px; padding:6px 9px;
+  border-left:2px solid currentColor; opacity:.72;
+  font-size:12px; line-height:1.45;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer;
+}
+
+/* 음성메시지 */
+.voicebar{
+  display:none; flex-shrink:0; align-items:center; gap:12px;
+  padding:11px 15px; background:var(--raise2); border-top:1px solid var(--line);
+}
+.voicebar.on{ display:flex; }
+.voicebar .vdot{
+  width:10px; height:10px; border-radius:50%; background:var(--bad);
+  animation:vpulse 1.1s ease-in-out infinite;
+}
+@keyframes vpulse{ 0%,100%{opacity:1} 50%{opacity:.25} }
+.voicebar .vtime{ flex:1; font-size:14px; font-variant-numeric:tabular-nums; }
+.voicebar button{
+  padding:8px 14px; font-size:13px; font-family:inherit;
+  border-radius:8px; cursor:pointer; border:1px solid var(--line);
+  background:transparent; color:var(--text);
+}
+.voicebar button.go{ background:var(--steel); color:#08101B; border-color:transparent; }
+.bub.media audio{ display:block; width:230px; max-width:100%; }
+
+/* 메시지 눌렀을 때 나오는 메뉴 */
+.msg .bub{ cursor:pointer; }
+.star{ color:var(--steel); font-size:10px; }
+
+/* 검색 */
+.findbar{
+  display:none; flex-shrink:0; gap:8px; padding:10px 14px;
+  background:var(--raise); border-bottom:1px solid var(--line);
+}
+.findbar.on{ display:flex; }
+.findbar input{
+  flex:1; min-width:0; padding:10px 13px; font-size:15px; font-family:inherit;
+  background:var(--raise2); color:var(--text);
+  border:1px solid var(--line); border-radius:9px;
+}
+.findbar button{
+  flex-shrink:0; padding:10px 13px; font-size:12.5px; font-family:inherit;
+  background:transparent; color:var(--dim);
+  border:1px solid var(--line); border-radius:9px; cursor:pointer;
+}
+.hit{ background:rgba(91,143,199,.3); border-radius:3px; }
+.msg.found .bub{ outline:2px solid var(--steel); outline-offset:2px; }
+
+/* 신고 상세 */
+.rp-detail{
+  width:100%; margin:10px 0 0; padding:11px 13px; min-height:76px;
+  font-size:14px; font-family:inherit; line-height:1.5; resize:vertical;
+  background:var(--raise2); color:var(--text);
+  border:1px solid var(--line); border-radius:10px;
+}
+.rp-detail:focus{ outline:2px solid var(--steel); outline-offset:1px; border-color:transparent; }
+
+/* =====================================================================
+   4-4 — 사라지는 메시지 · 링크 미리보기 · 메모함   (2026-09-05)
+   ===================================================================== */
+
+/* 사라질 메시지 표시 */
+.msg .gone-in{ color:var(--warn, #D98E5A); font-size:10px; display:block; }
+
+/* 알림줄 */
+.sysline.notice{
+  padding:7px 14px; margin:14px auto; max-width:88%;
+  background:var(--raise); border:1px solid var(--line); border-radius:14px;
+  font-size:11.5px; line-height:1.5;
+}
+
+/* 링크 미리보기 */
+.lp{
+  display:block; margin-top:7px; text-decoration:none; color:inherit;
+  border:1px solid var(--line); border-radius:10px; overflow:hidden;
+  background:var(--raise2);
+}
+.msg.out .lp{ background:rgba(0,0,0,.14); border-color:rgba(0,0,0,.18); }
+.lp img{ display:block; width:100%; max-height:150px; object-fit:cover; }
+.lp .lp-t{ padding:9px 11px 3px; font-size:13px; font-weight:600; line-height:1.4; }
+.lp .lp-d{
+  padding:0 11px 4px; font-size:11.5px; line-height:1.45; opacity:.75;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+.lp .lp-s{ padding:0 11px 9px; font-size:10.5px; opacity:.55; }
+
+/* 메모함 */
+.keep-row{
+  padding:13px 15px; margin-bottom:9px;
+  background:var(--raise); border:1px solid var(--line); border-radius:11px;
+}
+.keep-row .kt{ font-size:14px; line-height:1.55; white-space:pre-wrap; word-break:break-word; }
+.keep-row .kd{ display:flex; justify-content:space-between; align-items:center; margin-top:9px; }
+.keep-row .kd span{ font-size:11px; color:var(--faint); }
+.keep-row .kd button{
+  padding:5px 10px; font-size:11.5px; font-family:inherit;
+  background:transparent; color:var(--bad);
+  border:1px solid var(--line); border-radius:7px; cursor:pointer;
+}
+
+/* 사라지는 메시지 — 매 건마다 눈에 띄게 (2026-09-05) */
+.msg.temp .bub{
+  border:1px dashed var(--warn, #D98E5A);
+}
+.msg.out.temp .bub{
+  background:var(--steel); border-color:rgba(255,255,255,.55);
+}
+/* ⚠ 내 말풍선은 바탕이 진합니다. 같은 색을 쓰면 글씨가 묻힙니다.
+   받는 쪽(밝은 바탕)과 보내는 쪽(진한 바탕)을 따로 정합니다. */
+.temp-tag{
+  display:inline-flex; align-items:center; gap:3px;
+  margin-bottom:5px; padding:3px 8px;
+  background:rgba(217,142,90,.18); color:var(--warn, #D98E5A);
+  border:1px solid rgba(217,142,90,.5);
+  border-radius:9px; font-size:10.5px; font-weight:600; white-space:nowrap;
+}
+/* 내가 보낸 것 — 진한 바탕 위라 흰 글씨가 가장 잘 읽힙니다 */
+.msg.out .temp-tag{
+  background:rgba(255,255,255,.92); color:#8A4B1E;
+  border-color:rgba(255,255,255,.6);
+}
+/* 테두리만 쓰는 말풍선은 바탕이 없으므로 되돌립니다 */
+html[data-bubble="outline"] .msg.out .temp-tag{
+  background:rgba(217,142,90,.18); color:var(--warn, #D98E5A);
+  border-color:rgba(217,142,90,.5);
+}
+
+/* 켜져 있다는 것을 입력칸 위에 계속 띄웁니다 */
+.tempbar{
+  display:none; flex-shrink:0; align-items:center; gap:9px;
+  padding:8px 15px; font-size:12px;
+  background:rgba(217,142,90,.12); color:var(--warn, #D98E5A);
+  border-top:1px solid rgba(217,142,90,.3);
+}
+.tempbar.on{ display:flex; }
+.tempbar span{ flex:1; }
+.tempbar button{
+  flex-shrink:0; padding:4px 10px; font-size:11.5px; font-family:inherit;
+  background:transparent; color:inherit;
+  border:1px solid currentColor; border-radius:7px; cursor:pointer;
+}
+.chat-foot .clip.temp{ color:var(--warn, #D98E5A); border-color:var(--warn, #D98E5A); }
+
+/* =====================================================================
+   4-5 — 기념일 · 오늘의 질문 · 같이 듣기 · 자리비움   (2026-09-05)
+   ===================================================================== */
+
+/* 대화 머리 아래 띠 — 기념일·질문·음악이 여기 뜹니다 */
+.strip{
+  flex-shrink:0; display:flex; gap:8px; overflow-x:auto;
+  padding:9px 14px; background:var(--raise);
+  border-bottom:1px solid var(--line);
+  /* ⚠ 가로 스크롤바가 보이면 지저분합니다. 손으로 밀면 그대로 밀립니다. */
+  scrollbar-width:none; -ms-overflow-style:none;
+  -webkit-overflow-scrolling:touch;
+}
+.strip::-webkit-scrollbar{ display:none; }
+.strip:empty{ display:none; }
+.chip{
+  flex-shrink:0; display:flex; align-items:center; gap:6px;
+  padding:7px 12px; font-size:12px; font-family:inherit;
+  background:var(--raise2); color:var(--text);
+  border:1px solid var(--line); border-radius:18px; cursor:pointer;
+}
+.chip b{ font-weight:600; color:var(--steel); }
+.chip.away{ border-color:var(--warn, #D98E5A); color:var(--warn, #D98E5A); }
+
+/* 기념일 */
+.goal-row{
+  display:flex; align-items:center; gap:12px;
+  padding:13px 15px; margin-bottom:9px;
+  background:var(--raise); border:1px solid var(--line); border-radius:11px;
+}
+.goal-row .gi{ font-size:22px; flex-shrink:0; }
+.goal-row .gm{ flex:1; min-width:0; }
+.goal-row .gm b{ display:block; font-size:14.5px; }
+.goal-row .gm span{ font-size:11.5px; color:var(--faint); }
+.goal-row .gn{ flex-shrink:0; font-size:15px; font-weight:700; color:var(--steel); }
+.goal-row button{
+  flex-shrink:0; padding:5px 10px; font-size:11.5px; font-family:inherit;
+  background:transparent; color:var(--bad);
+  border:1px solid var(--line); border-radius:7px; cursor:pointer;
+}
+
+/* 오늘의 질문 */
+.qbox{ padding:16px; background:var(--raise); border:1px solid var(--line); border-radius:12px; }
+.qbox .qq{ font-size:15.5px; font-weight:600; line-height:1.55; margin-bottom:14px; }
+.qbox textarea{
+  width:100%; min-height:70px; padding:12px 14px; resize:vertical;
+  font-size:15px; font-family:inherit; line-height:1.5;
+  background:var(--raise2); color:var(--text);
+  border:1px solid var(--line); border-radius:10px;
+}
+.qans{ margin-top:12px; padding:12px 14px; background:var(--raise2); border-radius:10px; }
+.qans b{ display:block; font-size:11.5px; color:var(--faint); margin-bottom:5px; }
+.qans p{ margin:0; font-size:14px; line-height:1.55; white-space:pre-wrap; }
+.qhide{ margin-top:12px; font-size:12.5px; color:var(--dim); text-align:center; }
+
+/* 같이 듣기 */
+.player{ margin-top:12px; border-radius:11px; overflow:hidden; background:#000; }
+.player iframe{ display:block; width:100%; aspect-ratio:16/9; border:0; }
+
+/* ── 메뉴판 (2026-09-05) ─────────────────────────────────────────── */
+.fn-row{
+  display:flex; align-items:flex-start; gap:12px;
+  padding:13px 14px; margin-bottom:8px;
+  background:var(--raise2); border:1px solid var(--line); border-radius:11px;
+}
+.fn-row.on{ border-color:var(--steel); }
+.fn-mid{ flex:1; min-width:0; }
+.fn-mid b{ display:block; font-size:14px; font-weight:600; margin-bottom:4px; }
+.fn-mid span{
+  display:block; font-size:11.5px; line-height:1.5; color:var(--dim);
+}
+.fn-tg{
+  flex-shrink:0; min-width:52px; padding:7px 12px; margin-top:2px;
+  font-size:12px; font-family:inherit;
+  background:transparent; color:var(--dim);
+  border:1px solid var(--line); border-radius:16px; cursor:pointer;
+}
+.fn-tg.on{ color:var(--steel); border-color:var(--steel); }
+
+/* =====================================================================
+   통화 화면   (2026-09-05)
+   ===================================================================== */
+body.callscreen{
+  padding:0; height:100dvh; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+}
+.callbox{
+  width:100%; max-width:420px; height:100dvh;
+  display:flex; flex-direction:column; align-items:center;
+  padding:34px 24px calc(30px + env(safe-area-inset-bottom));
+}
+.callbox .who{ text-align:center; padding-top:38px; flex:1; }
+.callbox .av{
+  width:82px; height:82px; margin:0 auto 18px; border-radius:50%;
+  background:var(--raise2); border:1px solid var(--line);
+  display:flex; align-items:center; justify-content:center;
+  font-size:28px; font-weight:600; color:var(--steel);
+}
+.callbox .nm{ font-size:25px; font-weight:600; margin-bottom:5px; }
+.callbox .al{ font-size:13.5px; color:var(--dim); margin-bottom:26px; }
+.callbox .st{ font-size:14.5px; color:var(--dim); }
+.callbox .tm{ font-size:15px; color:var(--text); font-variant-numeric:tabular-nums; }
+
+/* 🔴 이 제품의 서명 — 내가 지금 누구인지 */
+.iam{
+  width:100%; padding:11px 15px; margin-bottom:22px;
+  background:rgba(91,143,199,.14); border:1px solid rgba(91,143,199,.35);
+  border-radius:11px; text-align:center;
+  font-size:13.5px; color:var(--steel);
+}
+.iam.warn{
+  background:rgba(217,142,90,.14); border-color:rgba(217,142,90,.4);
+  color:var(--warn, #D98E5A);
+}
+.iam b{ font-weight:700; }
+
+.callacts{ display:flex; gap:16px; justify-content:center; width:100%; }
+.rbtn{
+  width:62px; height:62px; flex-shrink:0; padding:0;
+  border:none; border-radius:50%; cursor:pointer;
+  font-size:23px; font-family:inherit;
+  display:flex; align-items:center; justify-content:center;
+}
+.rbtn.hang{ background:var(--bad); color:#12181F; }
+.rbtn.take{ background:#4CAF7D; color:#08130D; }
+.rbtn.plain{
+  width:52px; height:52px; font-size:19px;
+  background:transparent; color:var(--dim); border:1px solid var(--line);
+}
+.rbtn.plain.on{ color:var(--steel); border-color:var(--steel); }
+
+.callvid{
+  position:fixed; inset:0; z-index:-1;
+  display:none; background:#000;
+}
+.callvid.on{ display:block; }
+.callvid video{ width:100%; height:100%; object-fit:cover; }
+.callvid .mini{
+  position:absolute; right:14px; top:14px;
+  width:104px; height:150px; border-radius:11px; overflow:hidden;
+  border:1px solid rgba(255,255,255,.3);
+}
+.callvid .mini video{ object-fit:cover; }
+
+/* 통화기록 */
+.callrow .dir{ font-size:11.5px; }
+.callrow .dir.missed{ color:var(--bad); }
+
+/* ── 재생목록 (2026-09-05) ───────────────────────────────────────── */
+.trk{
+  display:flex; align-items:center; gap:10px;
+  padding:11px 13px; margin-bottom:7px;
+  background:var(--raise2); border:1px solid var(--line); border-radius:10px;
+}
+.trk.now{ border-color:var(--steel); }
+.trk .tn{ flex:1; min-width:0; }
+.trk .tn b{
+  display:block; font-size:13.5px; font-weight:600;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.trk .tn span{ font-size:11px; color:var(--faint); }
+.trk .tb{
+  flex-shrink:0; width:28px; height:28px; padding:0;
+  background:transparent; color:var(--dim);
+  border:1px solid var(--line); border-radius:7px;
+  font-size:12px; font-family:inherit; cursor:pointer;
+}
+.trk .tb:hover{ color:var(--text); }
+.trk .tb.play{ color:var(--steel); border-color:var(--steel); }
+.usage{
+  display:flex; align-items:center; gap:9px;
+  padding:9px 12px; margin:12px 0;
+  background:var(--raise2); border:1px solid var(--line); border-radius:9px;
+  font-size:11.5px; color:var(--dim);
+}
+.usage .bar{
+  flex:1; height:5px; background:var(--line); border-radius:3px; overflow:hidden;
+}
+.usage .bar i{ display:block; height:100%; background:var(--steel); }
+.usage .bar i.hot{ background:var(--warn, #D98E5A); }
+
+/* ── 대화창의 통화 기록 줄 (2026-09-05) ──────────────────────────── */
+.callline{
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  margin:14px auto; max-width:88%; padding:9px 14px;
+  background:var(--raise); border:1px solid var(--line); border-radius:16px;
+  font-size:12px; color:var(--dim); cursor:pointer;
+}
+.callline:hover{ border-color:var(--steel); }
+.callline .ci{ font-size:14px; flex-shrink:0; }
+.callline .cx{ flex:1; min-width:0; text-align:left; }
+.callline .cx b{ display:block; font-weight:600; color:var(--text); font-size:12.5px; }
+.callline .cx span{ font-size:10.5px; color:var(--faint); }
+.callline.missed{ border-color:rgba(217,106,106,.45); }
+.callline.missed .cx b{ color:var(--bad); }
+.callline .ct{ flex-shrink:0; font-size:10.5px; color:var(--faint); }
+
+/* ── 어디서나 돌아가는 길 (2026-09-05) ───────────────────────────── */
+.gohome{ display:flex; gap:7px; flex-shrink:0; }
+.gohome a{
+  display:flex; align-items:center; gap:5px;
+  padding:7px 11px; font-size:12px; text-decoration:none;
+  color:var(--dim); background:var(--raise2);
+  border:1px solid var(--line); border-radius:16px;
+}
+.gohome a:hover{ color:var(--text); border-color:var(--steel); }
+.chat-top .gohome a{ padding:6px 9px; font-size:11.5px; }
+
+/* 로그아웃은 눈에 덜 띄게, 맨 아래로 */
+.signout-zone{
+  margin-top:40px; padding-top:22px; border-top:1px solid var(--line);
+}
+.signout-zone button{
+  width:100%; padding:13px; font-size:13.5px; font-family:inherit;
+  background:transparent; color:var(--faint);
+  border:1px solid var(--line); border-radius:10px; cursor:pointer;
+}
+.signout-zone button:hover{ color:var(--bad); border-color:rgba(217,106,106,.4); }
+
+/* ── QR (2026-09-05) ─────────────────────────────────────────────── */
+.qr-box{
+  display:flex; justify-content:center; padding:18px;
+  background:#FFFFFF; border-radius:12px; margin:14px 0;
+}
+.qr-box canvas{ display:block; }
+.qr-cam{
+  width:100%; aspect-ratio:1; border-radius:12px; overflow:hidden;
+  background:#000; margin:12px 0;
+}
+.qr-cam video{ width:100%; height:100%; object-fit:cover; }
+.qr-note{
+  font-size:12px; color:var(--dim); line-height:1.6;
+  text-align:center; white-space:pre-line; margin:0 0 4px;
+}
+
+/* ── 이모지 판 닫기 (2026-09-05) ─────────────────────────────────── */
+.em-close{
+  flex-shrink:0; display:flex; justify-content:flex-end;
+  padding:6px 9px 0;
+}
+.em-close button{
+  padding:5px 13px; font-size:12px; font-family:inherit;
+  background:transparent; color:var(--dim);
+  border:1px solid var(--line); border-radius:14px; cursor:pointer;
+}
+.em-close button:hover{ color:var(--text); }
+.em-body{ flex:1; display:flex; flex-direction:column; min-height:0; }
+.chat-foot .clip.open{ color:var(--steel); border-color:var(--steel); }
+
+/* ── 데이터 설정 (2026-09-06) ────────────────────────────────────── */
+.prefrow .pl b{ display:block; font-size:14px; font-weight:600; }
+.prefrow .pl .ps{
+  display:block; margin-top:4px; font-size:11.5px;
+  line-height:1.5; color:var(--dim);
+}
+.prefrow{ align-items:flex-start; }
+.prefrow button{ margin-top:2px; }
+
+/* 통화 중 쓴 양 */
+.callbox .bytes{
+  font-size:11.5px; color:var(--faint); margin-top:6px;
+  font-variant-numeric:tabular-nums;
+}
+
+/* ── 암호화 (2026-09-06) ─────────────────────────────────────────── */
+.lockrow{
+  display:flex; align-items:center; gap:9px;
+  padding:9px 14px; margin:0;
+  background:rgba(91,143,199,.12); border-bottom:1px solid var(--line);
+  font-size:12px; color:var(--steel);
+}
+.lockrow .li{ font-size:13px; }
+.lockrow.warn{
+  background:rgba(217,142,90,.14); color:var(--warn, #D98E5A);
+}
+.lockrow button{
+  margin-left:auto; flex-shrink:0;
+  padding:5px 11px; font-size:11.5px; font-family:inherit;
+  background:transparent; color:inherit;
+  border:1px solid currentColor; border-radius:14px; cursor:pointer;
+}
+.bub.locked{
+  background:transparent !important; border:1px dashed var(--faint);
+  color:var(--faint); font-style:italic;
+}
+
+/* ── 방을 어떻게 쓸까 (2026-09-06) ───────────────────────────────── */
+.roomchoice{
+  padding:16px 15px; margin-bottom:11px; cursor:pointer;
+  background:var(--raise2); border:1px solid var(--line); border-radius:12px;
+}
+.roomchoice:hover{ border-color:var(--steel); }
+.roomchoice b{ display:block; font-size:15px; font-weight:600; margin-bottom:6px; }
+.roomchoice span{
+  display:block; font-size:12px; line-height:1.6; color:var(--dim);
+  white-space:pre-line;
+}
+.roomchoice.lock b{ color:var(--steel); }
+
+.memberrow{
+  display:flex; align-items:center; gap:11px;
+  padding:11px 13px; margin-bottom:7px;
+  background:var(--raise2); border:1px solid var(--line); border-radius:10px;
+}
+.memberrow .mav{
+  width:30px; height:30px; flex-shrink:0; border-radius:50%;
+  background:var(--raise); color:var(--steel);
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:600;
+}
+.memberrow .mn{ flex:1; min-width:0; font-size:13.5px; }
+.memberrow .ms{ flex-shrink:0; font-size:11.5px; color:var(--faint); }
+.memberrow.ok{ border-color:var(--steel); }
+.memberrow.ok .ms{ color:var(--steel); }
+.memberrow.no{ border-color:rgba(217,106,106,.4); }
+.memberrow.no .ms{ color:var(--bad); }
+
+/* ── 여럿이 모이는 방 (2026-09-06) ───────────────────────────────── */
+.crow.room .cav{ background:var(--raise); color:var(--steel); font-size:15px; }
+.crow.room .cname::before{ content:'👥 '; }
+
+/* 그룹 대화 — 누가 보냈는지 */
+.msg .who{
+  display:block; margin-bottom:3px; font-size:11px;
+  color:var(--steel); font-weight:600;
+}
+.msg.out .who{ display:none; }
+.msg .wav{
+  position:absolute; left:0; bottom:0;
+  width:26px; height:26px; border-radius:50%;
+  background:var(--raise2); color:var(--steel);
+  display:flex; align-items:center; justify-content:center;
+  font-size:10.5px; font-weight:600;
+}
+.chat-body.group .msg.in{ padding-left:34px; position:relative; }
+
+/* ── 여럿이 하는 통화 (2026-09-07) ───────────────────────────────── */
+.gcbar{
+  flex-shrink:0; display:none; align-items:center; gap:10px;
+  padding:10px 15px;
+  background:rgba(76,175,125,.16); border-bottom:1px solid rgba(76,175,125,.35);
+  font-size:12.5px; color:#4CAF7D;
+}
+.gcbar.on{ display:flex; }
+.gcbar .gcx{ flex:1; }
+.gcbar button{
+  flex-shrink:0; padding:6px 13px; font-size:12px; font-family:inherit;
+  background:#4CAF7D; color:#08130D;
+  border:none; border-radius:15px; cursor:pointer;
+}
+
+/* 통화 중인 사람들 */
+.gcpeople{ display:flex; flex-wrap:wrap; gap:14px; justify-content:center; margin:22px 0; }
+.gcperson{ text-align:center; width:88px; }
+.gcperson .gcav{
+  width:62px; height:62px; margin:0 auto 7px; border-radius:50%;
+  background:var(--raise2); border:2px solid var(--line);
+  display:flex; align-items:center; justify-content:center;
+  font-size:21px; font-weight:600; color:var(--steel);
+}
+.gcperson.on .gcav{ border-color:#4CAF7D; }
+.gcperson.me .gcav{ border-color:var(--steel); }
+.gcperson .gcnm{
+  font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.gcperson .gcst{ font-size:10.5px; color:var(--faint); }
+.gcperson.on .gcst{ color:#4CAF7D; }

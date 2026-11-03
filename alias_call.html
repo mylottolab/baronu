@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>바로너</title>
+<link rel="stylesheet" href="alias_common.css?v=20260927a">
+<link rel="stylesheet" href="alias_theme.css?v=20261021d">
+<script src="alias_config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="alias_common.js?v=20261101b"></script>
+<script src="alias_media.js?v=20260927a"></script>
+<script src="alias_call.js?v=20261020g"></script>
+<script>
+/* ⚠ alias_common.js 를 못 읽으면 화면이 텅 빕니다. 글씨를 채우는 것이
+   그 파일이기 때문입니다. 빈 화면만 보면 원인을 알 수가 없어서,
+   여기서 잡아 사람 말로 알려줍니다.
+   가장 흔한 원인은 anon 열쇠 줄이 두 줄로 나뉜 것입니다. */
+document.addEventListener("DOMContentLoaded", function(){
+  if (typeof AL === "undefined" || typeof AL.t !== "function") {
+    document.body.innerHTML =
+      '<div style="padding:26px;font-family:system-ui,sans-serif;line-height:1.8;' +
+      'color:#DDE5F0;background:#0E1621;min-height:100vh">' +
+      '<b style="font-size:17px">alias_common.js 를 못 읽었습니다.</b><br><br>' +
+      '가장 흔한 원인은 anon 열쇠 줄이 두 줄로 나뉜 것입니다.<br>' +
+      'alias_common.js 20번 줄이 한 줄인지 확인하세요.<br><br>' +
+      '<span style="color:#7E8FA6">F12 → Console 에 진짜 원인이 찍힙니다.</span></div>';
+    return;
+  }
+  AL.bootTheme();
+});
+</script>
+<style>
+/* 🔴 2026-09-12 — "눌러서 소리 켜기" 단추가 ✕ 를 덮고 있었습니다.
+   bottom:110px 은 하필 끊기 단추 자리입니다. 위로 올리고 맨 앞에 둡니다. */
+#tapSound{bottom:auto !important;top:26vh !important;z-index:90 !important}
+
+/* 🔴 2026-09-12 신설 — 영상통화 안내줄
+
+   받기 **전에** "영상입니다 · 얼굴이 나갑니다" 를 분명히 보여줍니다.
+   모르고 받았다가 얼굴이 나가면 되돌릴 수 없습니다.
+
+   ⚠ 공용 CSS(alias_theme.css)를 안 건드리려고 여기에 둡니다.
+     다른 화면에 영향이 없습니다. */
+.vidwarn{display:block;margin-top:9px;padding:10px 14px;border-radius:11px;
+  font-size:13.5px;line-height:1.55;font-weight:600;word-break:keep-all;
+  background:rgba(242,201,76,.14);color:#F2C94C;
+  border:1px solid rgba(242,201,76,.32)}
+/* 카메라를 껐을 때 내 작은 화면은 숨깁니다. 까만 네모가 남아 있으면
+   껐는지 고장인지 헷갈립니다. */
+.callvid .mini video[style*="hidden"]{display:none}
+
+/* 🔴🔴 2026-09-12 신설 — 영상 화면을 실제로 보이게 합니다
+
+   무슨 일이 났나
+     영상통화가 붙고 데이터도 오갔는데(46초에 17MB) **화면이 안 나왔습니다.**
+     <video> 자리는 있었지만 그것을 펼쳐 보여주는 CSS 가 없었습니다.
+     alias_theme.css 에 .callvid.on 같은 규칙이 없었던 것입니다.
+
+   공용 CSS 를 안 건드리려고 여기에 다 적습니다.
+   ⚠ body 에 vidon 이 붙었을 때만 켜집니다. 음성통화는 하나도 안 바뀝니다.
+
+   짜임새
+     상대 얼굴  화면 전체
+     내 얼굴    오른쪽 위 작은 네모
+     글씨·단추  그 위에 올라갑니다 (어두운 그늘을 깔아 읽히게) */
+.callvid{display:none}
+body.vidon .callvid{
+  display:block;position:fixed;inset:0;z-index:1;background:#000}
+/* 🔴 2026-09-12 — 영상 요소에 제 층을 줍니다.
+   안드로이드 웹뷰에서 층이 없으면 그림이 갱신 안 되고 굳는 일이 있습니다. */
+body.vidon #remoteV{width:100%;height:100%;object-fit:cover;background:#000;
+  transform:translateZ(0);will-change:transform;backface-visibility:hidden}
+body.vidon .callvid .mini{
+  position:absolute;right:14px;top:calc(14px + env(safe-area-inset-top,0px));
+  width:104px;height:140px;border-radius:14px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.35);background:#111;
+  box-shadow:0 6px 18px rgba(0,0,0,.5)}
+body.vidon .callvid .mini video{width:100%;height:100%;object-fit:cover;
+  transform:translateZ(0);will-change:transform}
+
+/* 글씨와 단추를 영상 위로 올립니다. */
+body.vidon .callbox{position:relative;z-index:2;background:transparent}
+/* 위아래에 어두운 그늘을 깔아야 흰 글씨가 읽힙니다. */
+body.vidon .callbox::before{
+  content:'';position:fixed;left:0;right:0;top:0;height:46vh;z-index:-1;
+  background:linear-gradient(to bottom,rgba(0,0,0,.72),rgba(0,0,0,0));
+  pointer-events:none}
+body.vidon .callbox::after{
+  content:'';position:fixed;left:0;right:0;bottom:0;height:42vh;z-index:-1;
+  background:linear-gradient(to top,rgba(0,0,0,.78),rgba(0,0,0,0));
+  pointer-events:none}
+/* 상대 얼굴이 보이는데 머리글자 동그라미까지 있으면 어수선합니다. */
+body.vidon .who .av{display:none}
+
+/* =====================================================================
+   🔴 2026-09-19 신설 — 녹음 협의
+
+   ⚠ 단추 글씨가 **무슨 일이 일어나는지** 말해야 합니다.
+     "15일이면" 처럼 줄여 쓰면 허락인지 거절인지 모호합니다.
+     상대에게 영향을 주는 기능이라 특히 그렇습니다.
+   ⚠ 단추를 가로로 늘어놓지 않고 세로로 쌓습니다. 글씨가 길어서
+     좁은 폰에서 찌그러집니다(함정 81).
+   ===================================================================== */
+#rcBg{display:none;position:fixed;inset:0;z-index:95;background:rgba(0,0,0,.72)}
+#rcBox{display:none;position:fixed;z-index:96;left:50%;top:50%;
+  transform:translate(-50%,-50%);width:min(400px,90vw);max-height:86vh;overflow:auto;
+  padding:22px;border-radius:18px;background:#1B2430;color:#DDE5F0;
+  border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 44px rgba(0,0,0,.6)}
+#rcBox h3{margin:0 0 12px;font-size:18px;font-weight:800;line-height:1.45;
+  word-break:keep-all}
+#rcBox p{margin:0 0 12px;font-size:14.5px;line-height:1.75;word-break:keep-all}
+#rcBox ul{margin:0 0 18px;padding-left:19px;font-size:13.5px;line-height:1.85;
+  opacity:.78}
+#rcBox ul li{margin-bottom:4px}
+#rcBox .days{display:flex;gap:8px;margin:0 0 18px}
+#rcBox .days button{flex:1;padding:13px 0;border-radius:12px;cursor:pointer;
+  font-size:15px;font-weight:700;background:rgba(255,255,255,.07);color:inherit;
+  border:1.5px solid rgba(255,255,255,.14)}
+#rcBox .days button.on{background:rgba(143,227,176,.18);color:#8FE3B0;
+  border-color:rgba(143,227,176,.55)}
+#rcBox .stack{display:flex;flex-direction:column;gap:9px}
+#rcBox .stack button{width:100%;padding:15px 12px;border-radius:13px;cursor:pointer;
+  font-size:15px;font-weight:700;line-height:1.4;word-break:keep-all;
+  background:rgba(255,255,255,.08);color:inherit;
+  border:1px solid rgba(255,255,255,.18)}
+#rcBox .stack button.go{background:rgba(143,227,176,.2);color:#8FE3B0;
+  border-color:rgba(143,227,176,.45)}
+#rcBox .stack button.bad{background:rgba(255,120,120,.15);color:#FFB4B4;
+  border-color:rgba(255,120,120,.4)}
+#rcBox .wait{text-align:center;font-size:14.5px;opacity:.7;padding:10px 0}
+
+/* 통화 내내 보이는 띠 — 양쪽 화면에 똑같이 */
+#recBar{display:none;align-items:center;gap:10px;margin:10px 0 0;
+  padding:11px 14px;border-radius:12px;font-size:13.5px;font-weight:700;
+  line-height:1.5;word-break:keep-all;
+  background:rgba(255,90,90,.16);color:#FFB4B4;
+  border:1px solid rgba(255,90,90,.45)}
+#recBar.on{display:flex}
+#recBar span{flex:1}
+#recBar button{flex:0 0 auto;padding:8px 13px;border-radius:999px;cursor:pointer;
+  font-size:12.5px;font-weight:700;background:rgba(255,255,255,.14);
+  color:inherit;border:1px solid currentColor}
+</style>
+</head>
+<body class="callscreen" data-t-title="clVoice" id="callBody">
+
+<div class="callvid" id="vid">
+  <video id="remoteV" autoplay playsinline></video>
+  <div class="mini"><video id="localV" autoplay playsinline muted></video></div>
+</div>
+
+<div class="callbox">
+  <div class="who">
+    <div class="av" id="av"></div>
+    <div class="nm" id="nm"></div>
+    <div class="al" id="al"></div>
+    <div class="st" id="st"></div>
+    <div class="tm" id="tm"></div>
+    <div class="bytes" id="bytes"></div>
+  </div>
+
+  <!-- 🔴 이 제품의 서명 — 어떤 나로 통화하는지 -->
+  <div class="iam" id="iam"></div>
+
+  <div class="callacts" id="acts"></div>
+</div>
+
+<audio id="remoteA" autoplay playsinline></audio>
+
+<!-- 🔴 2026-09-19 신설 — 녹음 협의 창 -->
+<!-- 🔴 2026-09-19 — 녹음 중임을 통화 내내 보여줍니다.
+     ⚠ 반드시 스크립트보다 **위**에 있어야 합니다. 아래에 두면 코드가
+       이걸 못 찾고 그 자리에서 멈춰, 통화화면이 통째로 죽습니다. -->
+<div id="recBar"><span></span><button id="recStop"></button></div>
+
+<div id="rcBg"></div>
+<div id="rcBox"></div>
+<button class="btn" id="tapSound" style="display:none;position:fixed;left:20px;right:20px;bottom:110px;width:auto;max-width:380px;margin:0 auto"
+        data-t="clTapSound"></button>
+
+<script>
+/* =====================================================================
+   통화 화면
+   걸기 · 받기 둘 다 이 화면입니다. 주소로 갈립니다.
+
+     alias_call.html?link=...&type=voice          걸기
+     alias_call.html?call=...&token=...&link=...  받기
+
+   🔴 화면 아래에 "나는 지금 개인용입니다" 가 늘 떠 있습니다.
+     받기 전에 어떤 나로 받는지 알 수 있어야, 거래처 얼굴로 받아야 할 전화를
+     개인 얼굴로 받는 사고가 안 납니다. 어떤 전화기도 이 줄을 못 씁니다.
+
+   🔴🔴 2026-09-10 고침 — 끝난 전화가 되살아나던 문제
+     ① 표(ticket)를 sessionStorage 에서 localStorage 로 옮겼습니다.
+        sessionStorage 는 앱(웹뷰)이 죽으면 통째로 지워집니다.
+        삼성이 앱을 재우면 표가 백지가 되어, 막아야 할 것을 못 막았습니다.
+        삼성 인터넷에서만 멀쩡했던 이유가 이것입니다 — 브라우저 탭은
+        안 죽으니 표가 남아 있었습니다.
+     ② 받는 쪽에서 벨을 울리기 "전에" 이미 끝난 통화인지 한 번 봅니다.
+        예전에는 3초 뒤에야 봤기 때문에 끝난 전화가 3초씩 울렸습니다.
+
+   🔴🔴 2026-10-05 — "직접 받았음(answered=1)"
+     큰 전화 화면(IncomingCallActivity) · 이어폰 · 차의 [받기] 로 이미 받고 왔으면,
+     이 화면이 [받기] 를 다시 묻지 않고 곧바로 연결합니다(음성통화).
+     ⚠ 영상통화는 얼굴이 나가는 일이라, 지금처럼 [카메라 끄고 받기] [영상으로 받기]
+       를 한 번 더 고르시게 합니다.
+   ===================================================================== */
+
+const P = new URLSearchParams(location.search);
+const linkId   = P.get('link');
+const callId   = P.get('call');       // 있으면 받는 쪽
+const token    = P.get('token');
+const callType = P.get('type') || 'voice';
+const once     = P.get('once');       // 이 통화의 표. 한 번만 씁니다
+const incoming = !!callId;
+const answeredAlready = P.get('answered') === '1';   // 🔴 2026-10-05 — 이미 [받기] 를 누르고 옴
+
+/* 🔴 뒤로 가기로 이 화면에 다시 오면 전화를 또 걸면 안 됩니다.
+   브라우저는 그냥 주소를 다시 열 뿐이라, 주소만 보고 "걸어라" 하면
+   뒤로 갈 때마다 전화가 걸립니다. 앞 화면을 볼 수가 없어집니다.
+
+   그래서 통화를 걸 때 한 번만 쓰는 표를 주소에 담고, 여기서 태웁니다.
+   이미 쓴 표면 걸지 않고 그냥 나갑니다.
+
+   ⚠ 2026-09-10 — localStorage 를 씁니다. sessionStorage 는 앱이 죽으면
+     지워져서, 정작 막아야 할 순간에 백지가 됩니다. */
+const USED_KEY = 'alias_used_call_tickets';
+
+function ticketBox(){
+  try {
+    localStorage.setItem('__alias_probe', '1');
+    localStorage.removeItem('__alias_probe');
+    return localStorage;
+  } catch (e) {
+    return sessionStorage;   // 시크릿 모드 등 — 없는 것보다는 낫습니다
+  }
+}
+
+function ticketUsed(t){
+  try {
+    var raw = ticketBox().getItem(USED_KEY);
+    return raw ? JSON.parse(raw).indexOf(t) >= 0 : false;
+  } catch (e) { return false; }
+}
+function burnTicket(t){
+  try {
+    var box = ticketBox();
+    var raw = box.getItem(USED_KEY);
+    var list = raw ? JSON.parse(raw) : [];
+    if (list.indexOf(t) >= 0) return;
+    list.push(t);
+    if (list.length > 60) list = list.slice(-60);
+    box.setItem(USED_KEY, JSON.stringify(list));
+  } catch (e) {}
+}
+
+/* 통화 화면을 떠날 때는 뒤로 가기 기록에 안 남깁니다.
+   그래야 뒤로 눌렀을 때 통화 화면이 아니라 그 앞 화면이 나옵니다. */
+function leaveTo(url){
+  /* 🔴 2026-10-27 — 통화 중 [뒤로] 막이로 넣어 둔 기록 한 칸을 먼저 걷어낸 뒤 옮깁니다.
+     안 걷으면 나중에 [뒤로] 를 눌렀을 때 끝난 통화 화면이 다시 열립니다. */
+  if (backGuardOn) {
+    backGuard(false);
+    var gone = false, go = function(){ if (gone) return; gone = true; location.replace(url); };
+    window.addEventListener('popstate', go, { once: true });
+    try { history.back(); } catch (e) { go(); }
+    setTimeout(go, 400);
+    return;
+  }
+  location.replace(url);
+}
+
+/* =====================================================================
+   🔴🔴 2026-10-27 — 통화 중 [뒤로] 를 누르면 통화가 끊기던 문제 (손님 제보)
+   뒤로 가면 통화 화면이 닫히며 통화가 끝났습니다(화면을 떠나면 끊는 규칙).
+   이제 통화가 붙으면 [뒤로] 를 이 화면이 받습니다.
+     · 새 안드로이드 앱(버전 24~): 앱이 알아서 앱만 뒤로 숨깁니다(통화 유지)
+     · 옛 앱 · 아이폰 · 브라우저: 화면에 남고 "홈으로 나가도 통화는 이어진다" 고 알려 줍니다
+   ===================================================================== */
+var backGuardOn = false;
+function backGuard(on){
+  if (on && !backGuardOn) {
+    backGuardOn = true;
+    try { history.pushState({ alCallGuard: 1 }, '', location.href); } catch (e) {}
+    window.addEventListener('popstate', onCallBack);
+  } else if (!on && backGuardOn) {
+    backGuardOn = false;
+    window.removeEventListener('popstate', onCallBack);
+  }
+}
+function onCallBack(){
+  if (!backGuardOn || leaving) return;
+  try { history.pushState({ alCallGuard: 1 }, '', location.href); } catch (e) {}
+  if (window.AliasNative && typeof AliasNative.moveToBack === 'function') { AliasNative.moveToBack(); return; }
+  callTip(AL.lang === 'en'
+    ? 'You are on a call. To use another app, go to your home screen — the call keeps going. To hang up, tap End.'
+    : '통화 중입니다. 다른 앱을 보려면 홈 화면으로 나가세요(통화는 계속됩니다). 통화를 끝내려면 [끊기]를 누르세요.');
+}
+function callTip(msg){
+  var d = document.getElementById('callTip');
+  if (!d) {
+    d = document.createElement('div'); d.id = 'callTip';
+    d.style.cssText = 'position:fixed;left:16px;right:16px;bottom:calc(110px + env(safe-area-inset-bottom,0px));z-index:9999;background:rgba(20,24,36,.94);color:#fff;font-size:14px;line-height:1.55;padding:12px 14px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.4);text-align:center';
+    document.body.appendChild(d);
+  }
+  d.textContent = msg; d.style.display = '';
+  clearTimeout(callTip._t); callTip._t = setTimeout(function(){ d.style.display = 'none'; }, 5000);
+}
+/* 🔴🔴 2026-09-19 — 녹음·녹화가 있었으면 **통화기록으로** 갑니다.
+
+   무슨 일이 났나
+     녹음을 멈추면 통화가 끝나고, 곧장 대화창으로 넘어가 버렸습니다.
+     그래서 "녹음을 저장했습니다" 를 볼 새가 없었습니다.
+
+   왜 통화기록인가
+     방금 담은 것을 **바로 듣거나 볼 수 있어야** 합니다. 대화창으로
+     가면 손님이 다시 통화기록을 찾아 들어가야 합니다.
+
+   ⚠ 글씨를 볼 시간을 드립니다. 저장 결과를 확인하지도 못하고 화면이
+     바뀌면 됐는지 안 됐는지 모릅니다.
+   ⚠ 녹음이 없었으면 예전처럼 대화창으로 갑니다. 바꿀 이유가 없습니다. */
+let recDone = false;        // 이번 통화에서 녹음·녹화를 했는가
+
+function goChat(delayMs){
+  var wait = delayMs || 0;
+  var where = 'alias_chat.html?link=' + encodeURIComponent(linkId);
+  /* 🔴 2026-10-30 — 누름 라인 화면에서 건 전화는 끝나면 그 라인 화면으로 돌아갑니다 */
+  var ret = P.get('ret') || '';
+  if (/^nureum_line\.html\?line=[0-9a-f-]{36}$/.test(ret)) where = ret;
+
+  if (recDone) {
+    where = 'alias_calls.html';
+    wait = Math.max(wait, 2200);   // 초록 글씨를 읽을 시간
+  }
+  setTimeout(function(){ leaveTo(where); }, wait);
+}
+
+let me = null, view = null;
+let muted = false;
+/* 🔴 2026-10-05 (2-3) — 스피커로 듣는 중인가. 영상은 처음부터 스피커, 음성은 수화기(귀에 대고) */
+let speakerOn = (callType === 'video');
+/* 🔴 2026-10-19 — 폰이 알려 주는 "지금 소리가 실제로 나가는 곳" (speaker · receiver · bt · headset)
+   스피커를 켰는데 receiver 면 단추에 "안 바뀜" 이 보입니다. */
+let audioRoute = '';
+AL.onAudioRoute = function(r){
+  if (r === audioRoute) return;
+  audioRoute = r;
+  try { paintActs(); } catch (e) {}
+};
+let tick = null, t0 = null;
+
+function el(id){ return document.getElementById(id); }
+
+function routeNote(en){
+  if (!audioRoute) return '';
+  const ko = { speaker: '아래 스피커', receiver: '귀(수화기)', bt: '블루투스', headset: '이어폰', other: '기타' };
+  const enm = { speaker: 'loudspeaker', receiver: 'earpiece', bt: 'Bluetooth', headset: 'headset', other: 'other' };
+  if (speakerOn && audioRoute === 'receiver') return en ? ' · not switched' : ' · 안 바뀜';
+  return ' · ' + (en ? enm : ko)[audioRoute];
+}
+
+function setStatus(text){ el('st').textContent = text || ''; }
+
+/* 🔴 2026-09-12 — "눌러서 소리 켜기" 를 누르면 둘 다 다시 틉니다.
+   이 한 번의 손가락 터치가 브라우저에게 주는 허락입니다. */
+/* 🔴 2026-10-20 — 안드로이드에서 소리가 "재생 중" 인데 시계가 멈추는 일: 소리 줄을 새로 끼워 다시 틉니다 */
+function reattach(m){
+  try {
+    const st = m.srcObject; if (!st) return;
+    const tracks = (m.id === 'remoteA') ? st.getAudioTracks() : st.getTracks();
+    m.srcObject = null;
+    m.srcObject = new MediaStream(tracks);
+    m.volume = 1.0; m.muted = false;
+    m.play().catch(function(){});
+    console.warn('[call] ' + m.id + ' 다시 붙였습니다');
+  } catch (e) { console.warn('[call] 다시 붙이기 실패', e); }
+}
+document.getElementById('tapSound').addEventListener('click', function(){
+  ['remoteA', 'remoteV'].forEach(function(id){
+    const m = el(id);
+    if (!m || !m.srcObject) return;
+    reattach(m);   // 🔴 2026-10-20 — 누르면 줄을 새로 끼워 틉니다
+  });
+  window.__stuck = {};
+  this.style.display = 'none';
+});
+
+/* 🔴 2026-09-12 — 영상 화면을 켭니다.
+   body 에 표를 붙여야 위 CSS 가 살아납니다. */
+function showVideoMode(){
+  el('vid').classList.add('on');
+  document.body.classList.add('vidon');
+}
+
+/* 붙고 나면 "받으면 얼굴이 보입니다" 는 더 이상 맞는 말이 아닙니다.
+   지금 내 카메라가 나가는지 아닌지로 바꿔 적습니다. */
+function paintVidNote(){
+  const w = document.querySelector('.vidwarn');
+  if (!w || callType !== 'video') return;
+  const on = AL.hasCamera && AL.hasCamera() && !AL.cameraIsOff();
+  w.textContent = on ? ('📹 ' + AL.t('clSendingVid')) : AL.t('clNoCamNote');
+}
+
+function paintWho(){
+  const shown = view.peer_label || view.peer_display || AL.t('cntUnnamed');
+  el('av').textContent = AL.initial(view.my_face);
+  /* 🔴 2026-09-13 — 어떤 나로 통화하는지가 색으로도 보입니다.
+     글씨를 못 읽는 순간에도 색은 눈에 들어옵니다. */
+  AL.paintFace(el('av'), view.my_face || '');
+  /* 🔴 2026-09-13 — 사진이 있으면 사진으로 덮습니다.
+     급할 때 글씨는 못 읽어도 얼굴은 눈에 들어옵니다. */
+  AL.myFaceMap().then(function(m){
+    var path = m[view.my_face];
+    if (!path) return;
+    el('av').setAttribute('data-face', path);
+    AL.paintFaces(el('av').parentNode);
+  });
+  el('nm').textContent = shown;
+  el('al').textContent = (view.peer_label && view.peer_display) ? view.peer_display : '';
+
+  // 걸 때와 받을 때 문구가 다릅니다.
+  const box = el('iam');
+  box.innerHTML = '';
+  const t = document.createElement('span');
+  t.textContent = AL.t(incoming ? 'clAnswerAs' : 'clIAm', { face: view.my_face || '' });
+  box.appendChild(t);
+  box.classList.toggle('warn', incoming);
+
+  /* 🔴🔴 2026-09-12 — 영상통화임을 **받기 전에** 분명히 알립니다.
+     모르고 받았다가 얼굴이 나가면 되돌릴 수 없습니다. */
+  if (callType === 'video') {
+    const v = document.createElement('div');
+    v.className = 'vidwarn';
+    v.textContent = incoming
+      ? ('📹 ' + AL.t('clVideoIn') + ' — ' + AL.t('clFaceWarn'))
+      : ('📹 ' + AL.t('clSendingVid'));
+    box.appendChild(v);
+  }
+}
+
+function paintActs(){
+  const box = el('acts');
+  box.innerHTML = '';
+
+  if (incoming && !AL.call.pc) {
+    box.appendChild(btn('rbtn hang', '✕', AL.t('clDecline'), decline));
+
+    /* 🔴🔴 2026-09-12 — 영상통화는 받는 길이 둘입니다.
+
+       얼굴은 세상에서 가장 확실한 신분증입니다. 이 앱은 그것을 감추려고
+       쓰는 앱인데, 영상통화를 받는 순간 다 드러나면 곤란합니다.
+
+         🎙 카메라 끄고 받기 — 내 카메라는 아예 안 켭니다. 상대만 보입니다
+         📹 영상으로 받기   — 서로 봅니다
+
+       ⚠ 순서가 중요합니다. **카메라 끄고 받기를 먼저** 둡니다.
+         급하면 오른쪽 큰 단추를 누르게 되는데, 그게 얼굴이 나가는 쪽이면
+         사고가 납니다. 조심스러운 쪽을 손에 가까이 둡니다. */
+    if (callType === 'video') {
+      box.appendChild(btn('rbtn plain', '🎙', AL.t('clAnsAudio'),
+        function(){ answer({ noCam: true }); }));
+      box.appendChild(btn('rbtn take', '📹', AL.t('clAnsVideo'),
+        function(){ answer({ noCam: false }); }));
+    } else {
+      box.appendChild(btn('rbtn take', '☏', AL.t('clAnswer'),
+        function(){ answer({}); }));
+    }
+    return;
+  }
+
+  const m = btn('rbtn plain' + (muted ? ' on' : ''), muted ? '🔇' : '🎙',
+    AL.t(muted ? 'clUnmute' : 'clMute'), function(){
+      muted = AL.toggleMute(); paintActs();
+    });
+  box.appendChild(m);
+
+  /* 🔴 2026-10-05 (2-3) — [🔊 스피커] 수화기 ↔ 스피커. 앱에서만(브라우저는 폰이 알아서 함).
+     ⚠ 블루투스 이어폰이 연결돼 있으면 스피커를 끈 상태 = 이어폰으로 들립니다. */
+  if (window.AliasNative && typeof AliasNative.setSpeaker === 'function') {
+    const en = AL.lang === 'en';
+    box.appendChild(btn('rbtn plain' + (speakerOn ? ' on' : ''), speakerOn ? '🔊' : '🔈',
+      (speakerOn ? (en ? 'Speaker on' : '스피커 켜짐') : (en ? 'Speaker' : '스피커')) + routeNote(en), function(){
+        speakerOn = !speakerOn;
+        try { AliasNative.setSpeaker(speakerOn); } catch (e) { console.warn('[call] 스피커 바꾸기 실패', e); }
+        if (AL.isIOSApp && AL.isIOSApp()) setTimeout(function(){ AL.reviveMic(true); }, 1000);   // 🔴 2026-10-20
+        paintActs();
+      }));
+  }
+
+  /* 🔴 2026-09-19 — 녹음. **통화 중 누구든** 누를 수 있습니다.
+     ⚠ 담는 중이면 안 보여줍니다. 멈추기는 위 띠에 있습니다. */
+  if (AL.recSupported && AL.recSupported() && !AL.recording()) {
+    box.appendChild(btn('rbtn plain', '🔴',
+      AL.t(callType === 'video' ? 'rcAskVid' : 'rcBtn'), rcAsk));
+  }
+
+  /* 🔴 2026-09-12 — 카메라 단추는 **카메라가 실제로 있을 때만** 냅니다.
+     "카메라 끄고 받기" 로 받았으면 켤 카메라가 없습니다.
+     없는 단추를 보여주고 눌러도 아무 일이 없으면 손님이 고장인 줄 압니다. */
+  if (callType === 'video' && AL.hasCamera && AL.hasCamera()) {
+    const off = AL.cameraIsOff();
+    box.appendChild(btn('rbtn plain' + (off ? ' on' : ''), off ? '🚫' : '📹',
+      AL.t(off ? 'clCamOn' : 'clCamOff'), function(){
+        AL.toggleCamera();
+        el('localV').style.visibility = AL.cameraIsOff() ? 'hidden' : '';
+        paintActs(); paintVidNote();
+      }));
+    box.appendChild(btn('rbtn plain', '🔄', AL.t('clCamFlip'), async function(){
+      const s = await AL.switchCamera();
+      if (s) el('localV').srcObject = s;
+    }));
+  }
+
+  /* 🔴🔴 2026-09-12 — 끊기 단추에 안전장치를 둡니다.
+
+     끊기는 손님이 제일 급할 때 누르는 단추입니다. 무슨 일이 있어도
+     들어야 합니다. 세 겹으로 둡니다.
+       ① 누르자마자 글씨를 바꿔 **눌렸다는 것**을 보여줍니다
+       ② 끊는 도중에 문제가 생겨도 삼켜서 멈추지 않게 합니다
+       ③ 3초가 지나도 화면이 안 닫히면 **그냥 나갑니다** */
+  box.appendChild(btn('rbtn hang', '✕', AL.t('clHangup'), function(){
+    console.log('[call] 끊기 단추를 눌렀습니다');
+    setStatus(AL.t('clEnded'));                       // ①
+    try { AL.endCall('completed'); }                  // ②
+    catch (e) {
+      console.error('[call] 끊기 실패', e);
+      el('bytes').textContent = '끊기: ' + String((e && e.message) || e).slice(0, 60);
+    }
+    setTimeout(function(){ if (!leaving) bye(); }, 3000);   // ③
+  }));
+}
+
+function btn(cls, icon, label, onClick){
+  const b = document.createElement('button');
+  b.className = cls;
+  b.textContent = icon;
+  b.setAttribute('aria-label', label);
+  b.addEventListener('click', onClick);
+  return b;
+}
+
+function startTimer(){
+  if (tick) return;
+  t0 = Date.now();
+  tick = setInterval(function(){
+    const s = Math.round((Date.now() - t0) / 1000);
+    el('tm').textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+  }, 500);
+}
+
+function onState(state, extra){
+  if (state === 'preparing')      setStatus(AL.t('clCalling'));
+  else if (state === 'ringing')   { setStatus(AL.t('clCalling')); AL.startDialTone(); }
+  else if (state === 'answering') { AL.stopDialTone(); setStatus(AL.t('clConnected')); }
+  else if (state === 'connected') { AL.stopDialTone(); setStatus(AL.t('clConnected')); startTimer(); paintActs(); paintVidNote(); ongoingStart(); backGuard(true); }
+  /* 🔴 2026-09-22 — 통화 중 흔들렸을 때.
+     ⚠ 말없이 조용하면 손님이 끊긴 줄 알고 먼저 끊어버립니다.
+       "다시 잇는 중" 을 보여줘야 기다려 줍니다.
+     ⚠ 시간 표시는 그대로 이어갑니다(startTimer 는 두 번 불려도 안전합니다). */
+  else if (state === 'reconnecting') { setStatus(AL.t('clReconnecting')); }
+  else if (state === 'reconnected')  { setStatus(AL.t('clConnected')); }
+  else if (state === 'no-media')  setStatus(AL.t('clNoMedia'));
+  else if (state === 'failed')    { setStatus(AL.t('clFailed')); bye(); }
+  else if (state === 'declined')  { setStatus(AL.t('clDeclined')); bye(); }
+  else if (state === 'peer-hangup') { setStatus(AL.t('clEnded')); bye(); }
+  else if (state === 'ended')     { setStatus(AL.t('clEnded')); bye(); }
+  else if (state === 'need-wifi') { setStatus(AL.t('dtNoWifi')); bye(); }
+  else if (state === 'bytes') {
+    // ⚠ 통화 중에 얼마나 쓰는지 보여줍니다. 모르면 불안합니다.
+    let line = AL.t('dtThisCall', { size: AL.fmtBytes(extra.bytes) });
+
+    /* 🔴 2026-09-13 — 소리 상태는 콘솔에만 남깁니다.
+       화면에 "소리재생(3.4)" 같은 글씨가 뜨면 손님이 불안해합니다.
+
+       ⚠ 소리가 안 들린다는 말을 들으면 여기를 보세요.
+         시계가 올라가면 소리가 스피커로 가고 있는 것이고,
+         0.0 에 머물면 소리가 아예 안 오는 것입니다.
+         2026-09-13 에 이 숫자 하나로 "코드가 아니라 폰" 임을 알았습니다. */
+    const a0 = el('remoteA');
+    if (a0) {
+      console.log('[call] 소리 ' + (a0.paused ? '멈춤' : '재생') +
+                  '(' + a0.currentTime.toFixed(1) + ')');
+    }
+    el('bytes').style.whiteSpace = 'pre-line';
+
+    /* 🔴 2026-10-20 — 소리가 한쪽만 안 들릴 때 원인을 바로 보이게: 보낸 소리 · 받은 소리 · 내 마이크 크기
+       ↑ 가 안 늘면 내 쪽이 안 보내는 것, ↓ 가 안 늘면 상대가 안 보내는 것, 마이크가 계속 0 이면 내 마이크가 막힌 것 */
+    if (callType !== 'video') {
+      const bar = (v) => v == null ? '–' : ('▁▂▃▄▅▆▇█'.charAt(Math.min(7, Math.floor(Math.sqrt(v) * 8))));
+      line += '\n' + (AL.lang === 'en' ? 'sent ' : '보냄 ') + AL.fmtBytes(extra.aOut || 0) + ' · ' +
+              (AL.lang === 'en' ? 'got ' : '받음 ') + AL.fmtBytes(extra.aIn || 0) +
+              (extra.micLv != null ? ' · ' + (AL.lang === 'en' ? 'mic ' : '내 마이크 ') + bar(extra.micLv) : '');
+    }
+
+    /* 영상통화는 여기에 더 자세히 붙입니다. */
+    if (callType === 'video') {
+      line += '\n↑' + AL.fmtBytes(extra.up) + '  ↓' + AL.fmtBytes(extra.down);
+      line += '  · 영상↓' + AL.fmtBytes(extra.vIn);
+      if (extra.fps != null) line += ' · ' + Math.round(extra.fps) + '장/초';
+      const v = el('remoteV');
+      line += ' · 영상' + (v && !v.paused ? '재생' : '멈춤');
+
+    }
+    el('bytes').style.whiteSpace = 'pre-line';
+    el('bytes').textContent = line;
+  }
+
+  /* 🔴🔴 2026-09-12 신설 — 거는 과정을 다섯 단계로 보여줍니다.
+     멈춘 자리 바로 다음이 문제입니다. */
+  else if (state === 'step') {
+    el('bytes').textContent = extra.n + '/' + extra.of + ' ' + extra.what;
+  }
+
+  else if (state === 'ice-found') {
+    var line;
+    if (!extra.turn) {
+      line = '🔴 중계 못 받음' + (extra.err ? ' (' + extra.err + ')' : '');
+    } else {
+      line = '집 ' + extra.host + ' · 밖 ' + extra.srflx + ' · 중계 ' + extra.relay;
+      if (!extra.relay) line = '🔴 ' + line;
+    }
+    el('bytes').textContent = line;
+  }
+
+  else if (state === 'ice-state') {
+    if (tick) return;                       // 이미 붙었으면 건드리지 않습니다
+    var m = {
+      'new':          '길 찾는 중',
+      'checking':     '길 맞춰보는 중',
+      'connected':    '연결됨',
+      'completed':    '연결됨',
+      'disconnected': '끊겼습니다 · 다시 붙는 중',
+      'failed':       '길을 못 찾았습니다',
+      'closed':       '',
+    }[extra.state];
+    if (m) setStatus(m);
+  }
+
+  if (state === 'local-stream' && callType === 'video') {
+    showVideoMode();
+    el('localV').srcObject = extra.stream;
+  }
+  /* 🔴 2026-09-19 — 녹음 협의 신호 */
+  if (state === 'rec') { onRecSignal(extra.kind, extra.days, extra.who, extra.vid); return; }
+
+  if (state === 'remote-stream') {
+    /* 🔴🔴 2026-09-12 — 소리와 영상을 갈라 받습니다.
+       소리는 <audio id="remoteA"> 로, 영상은 <video id="remoteV"> 로.
+       한 요소에 둘 다 밀어넣으면 도착 순서에 따라 영상이 안 그려집니다. */
+    const isVid = (extra.kind === 'video');
+    const target = isVid ? el('remoteV') : el('remoteA');
+    target.srcObject = extra.stream;
+    try { target.volume = 1.0; target.muted = false; } catch (e) {}
+
+    if (isVid) showVideoMode();
+
+    /* 🔴🔴 2026-09-12 — 소리 · 영상이 멈춰 있으면 다시 틀어줍니다.
+       "재생 중" 이라는 말을 믿지 않고 시계가 실제로 가는지 봅니다.
+       두 번 연속 제자리면 손님에게 한 번 눌러달라고 합니다. */
+    if (!window.__mediaNudge) {
+      window.__lastT = {};
+      window.__stuck = {};
+      window.__mediaNudge = setInterval(function(){
+        ['remoteA', 'remoteV'].forEach(function(id){
+          const m = el(id);
+          if (!m || !m.srcObject) return;
+
+          if (m.paused) { m.play().catch(function(){}); return; }
+
+          const t = m.currentTime;
+          if (window.__lastT[id] === t) {
+            window.__stuck[id] = (window.__stuck[id] || 0) + 1;
+            /* 🔴 2026-10-20 — 멈추면 먼저 스스로 다시 붙여 봅니다(소리 줄을 떼었다 다시 꽂기) */
+            if (window.__stuck[id] === 2 || window.__stuck[id] === 5) reattach(m);
+            if (window.__stuck[id] >= 3) {
+              const b = el('tapSound');
+              if (b.style.display === 'none') {
+                console.warn('[call] ' + id + ' 이 재생 중이라는데 시계가 안 갑니다');
+                b.style.display = '';
+              }
+            }
+          } else {
+            window.__stuck[id] = 0;
+          }
+          window.__lastT[id] = t;
+        });
+      }, 2000);
+    }
+
+    // ⚠ 브라우저가 소리 재생을 막을 수 있습니다(자동재생 정책).
+    //   막히면 조용히 실패하므로, 눌러서 켜는 단추를 띄웁니다.
+    const p = target.play();
+    if (p && p.catch) {
+      p.catch(function(e){
+        console.warn('[call] 재생이 막혔습니다 (' + (extra.kind || '?') + ')', e);
+        el('tapSound').style.display = '';
+      });
+    }
+  }
+}
+
+/* 🔴 2026-09-10 신설 — 두 번 부르지 않게 빗장을 겁니다.
+   ⚠⚠ 2026-09-12 — 이 한 줄이 **사라진 적이 있습니다.**
+     그러면 bye() 가 통째로 안 돌아 ✕ 를 눌러도 화면이 안 닫혔습니다.
+     **이 줄을 지우지 마세요.** */
+var leaving = false;
+
+function bye(){
+  ongoingStop();          // 🔴 2026-09-22 — 통화 중 알림줄 끄기
+  if (leaving) return;
+  leaving = true;
+  /* 🔴 2026-09-19 — 녹음 중이었으면 저장하고 나갑니다. */
+  try { recFinish(); } catch (e) { console.warn('[rec] 마무리 실패', e); }
+
+  AL.stopRinging();
+  AL.stopDialTone();
+  stopAliveWatch();
+  if (tick) { clearInterval(tick); tick = null; }
+  el('acts').innerHTML = '';
+  const vw = document.querySelector('.vidwarn');
+  if (vw) vw.remove();
+  el('bytes').textContent = '';
+  // 잠깐 보여준 뒤 대화로 돌아갑니다.
+  goChat(1600);
+}
+
+/* =====================================================================
+   🔴 2026-09-09 신설 — 벨이 영영 울리던 문제
+     ① 3초마다 calls 표를 보고 ended_at 이 채워졌으면 멈춥니다
+     ② 그와 별개로 45초가 지나면 무조건 멈춥니다
+   ===================================================================== */
+var aliveTimer = null, ringLimit = null;
+var RING_MAX_MS = 45000;
+
+function stopAliveWatch(){
+  if (aliveTimer) { clearInterval(aliveTimer); aliveTimer = null; }
+  if (ringLimit) { clearTimeout(ringLimit); ringLimit = null; }
+}
+
+function endedQuietly(){
+  stopAliveWatch();
+  AL.stopRinging();
+  /* 🔴 2026-09-11 — 벨을 울리던 알림도 같이 지웁니다. */
+  if (AL.clearCallNotices) AL.clearCallNotices(callId);
+  setStatus(AL.t('clEnded'));
+  el('acts').innerHTML = '';
+  goChat(1400);
+}
+
+/* 🔴 2026-09-10 — 벨을 울리기 전에 물어봅니다.
+     'over'    끝난 통화입니다 (또는 아예 없는 통화입니다)
+     'live'    아직 살아 있습니다
+     'unknown' 못 읽었습니다 — 일단 울리고 watchCallAlive 에 맡깁니다 */
+async function checkAlreadyOver(){
+  try {
+    var r = await AL.sb.from('calls')
+      .select('ended_at').eq('id', callId).maybeSingle();
+    if (!r.data) return 'over';                 // 없는 통화 = 열지 않습니다
+    return r.data.ended_at ? 'over' : 'live';
+  } catch (e) {
+    return 'unknown';
+  }
+}
+
+function watchCallAlive(){
+  stopAliveWatch();
+
+  aliveTimer = setInterval(async function(){
+    if (AL.call.pc) { stopAliveWatch(); return; }   // 받았으면 그만 봅니다
+    try {
+      var r = await AL.sb.from('calls')
+        .select('ended_at').eq('id', callId).maybeSingle();
+      if (r.data && r.data.ended_at) endedQuietly();
+    } catch (e) { /* 못 읽어도 ② 가 있으니 괜찮습니다 */ }
+  }, 3000);
+
+  ringLimit = setTimeout(function(){
+    if (AL.call.pc) return;
+    endedQuietly();
+  }, RING_MAX_MS);
+}
+
+let answering = false;   // 🔴 2026-10-05 — 두 번 받지 않게(주소 · 앱 창구가 겹칠 수 있음)
+async function answer(opts){
+  if (answering || AL.call.pc) return;
+  answering = true;
+  opts = opts || {};
+  AL.stopRinging();
+  stopAliveWatch();
+
+  /* 🔴 2026-09-09: 받기 직전에 한 번 더 봅니다.
+     알림을 늦게 누르면 그 사이 A 가 끊었을 수 있습니다. */
+  try {
+    var chk = await AL.sb.from('calls')
+      .select('ended_at, answered_at').eq('id', callId).maybeSingle();
+    if (!chk.data || chk.data.ended_at) { endedQuietly(); return; }
+  } catch (e) { /* 못 읽으면 그냥 받아봅니다 */ }
+
+  try {
+    await AL.answerCall({
+      linkId: linkId, sideId: view.my_side_id,
+      callId: callId, token: token, type: callType,
+      noCam: !!opts.noCam,          // 🔴 2026-09-12 — 카메라 끄고 받기
+      onState: onState,
+    });
+    if (opts.noCam) el('bytes').textContent = AL.t('clNoCamNote');
+    paintActs();
+  } catch (e) {
+    console.error(e);
+    answering = false;
+    setStatus(AL.t('clNoMedia'));
+  }
+}
+
+/* 🔴🔴 2026-10-05 — 앱(자바)이 "이미 받았다" 고 알려 올 때.
+   바로너를 보고 있는 중이면 이 화면이 먼저 떠 있어서 주소가 바뀌지 않습니다.
+   그때 앱이 이것을 불러 곧바로 연결합니다(음성통화만 — 영상은 고르시게 둡니다). */
+window.ALIAS_ANSWER_NOW = function(){
+  try {
+    if (incoming && view && !AL.call.pc && callType !== 'video') answer({});
+  } catch (e) { console.warn('[call] 바로 받기 실패', e); }
+};
+
+/* 🔴🔴 2026-10-05 (2-4) — 통화 중 일반 전화를 "대기 후 받기" 하면 앱(자바)이 부릅니다.
+   대기 동안 서로 소리가 안 가게 — 내 마이크와 상대 소리를 끄고, 돌아오면 원래대로. */
+let onHold = false, mutedBeforeHold = false;
+window.ALIAS_HOLD = function(on){
+  try {
+    on = !!on;
+    if (on === onHold) return;
+    onHold = on;
+    const en = AL.lang === 'en';
+    if (on) {
+      mutedBeforeHold = muted;
+      if (AL.call.local) AL.call.local.getAudioTracks().forEach(function(t){ t.enabled = false; });
+      ['remoteA', 'remoteV'].forEach(function(id){ const m = el(id); if (m) m.muted = true; });
+      setStatus(en ? 'On hold — another call is in progress' : '대기 중 — 다른 전화를 받고 있습니다');
+    } else {
+      if (AL.call.local) AL.call.local.getAudioTracks().forEach(function(t){ t.enabled = !mutedBeforeHold; });
+      muted = mutedBeforeHold;
+      ['remoteA', 'remoteV'].forEach(function(id){ const m = el(id); if (m) { m.muted = false; m.play && m.play().catch(function(){}); } });
+      setStatus(AL.t('clConnected'));
+      try { AL.reviveMic && AL.reviveMic(); } catch (e) {}   // 일반 전화에 마이크를 빼앗겼을 수 있음
+    }
+    paintActs();
+  } catch (e) { console.warn('[call] 대기 바꾸기 실패', e); }
+};
+
+/* 🔴🔴 2026-10-05 (2-2) — 이어폰 · 차의 [거절] · [끊기] 를 앱(자바)이 전해 올 때 */
+window.ALIAS_DECLINE_NOW = function(id){
+  try {
+    if (incoming && (!id || id === callId) && !AL.call.pc) { decline(); return; }
+    if (AL.declineCall && id) AL.declineCall(id);
+  } catch (e) { console.warn('[call] 바로 거절 실패', e); }
+};
+window.ALIAS_HANGUP_NOW = function(){
+  try {
+    setStatus(AL.t('clEnded'));
+    if (AL.call && AL.call.pc) AL.endCall('completed');
+    setTimeout(function(){ if (!leaving) bye(); }, 1500);
+  } catch (e) { console.warn('[call] 바로 끊기 실패', e); try { bye(); } catch (e2) {} }
+};
+
+async function decline(){
+  AL.stopRinging();
+  stopAliveWatch();
+  if (AL.clearCallNotices) AL.clearCallNotices(callId);   // 🔴 벨 끄기
+  await AL.declineCall(callId);
+  goChat(0);
+}
+
+/* =====================================================================
+   🔴🔴 2026-09-19 신설 — 통화 녹음 협의
+   ⚠ 늘 **짧은 쪽**을 따릅니다. 조심스러운 쪽이 이깁니다.
+   ⚠ 몰래 시작할 수 없습니다. 상대의 허락 신호를 받아야만 담습니다.
+   ===================================================================== */
+const REC_DAYS = [15, 30, 90];
+let recAskDays = 90;
+let recDays = null;
+let recAsking = false;
+
+function rcShow(on){
+  var g = el('rcBg'), b = el('rcBox');
+  if (g) g.style.display = on ? 'block' : 'none';
+  if (b) b.style.display = on ? 'block' : 'none';
+}
+(function(){
+  var g = el('rcBg');
+  if (!g) { console.warn('[rec] rcBg 가 없습니다'); return; }
+  g.addEventListener('click', function(){
+    /* 답을 기다리는 중에는 못 닫습니다. 상대 화면은 떠 있으니까요. */
+    if (!recAsking) rcShow(false);
+  });
+})();
+
+/* =====================================================================
+   🔴🔴 2026-09-22 — 통화 중 알림줄 (안드로이드 CallOngoingService)
+   ⚠ 옛 APK 에는 창구가 없습니다. 있을 때만 부릅니다.
+   ⚠ 끄는 것은 여러 번 불려도 괜찮습니다. 켜진 채 남는 것이 더 나쁩니다.
+   ===================================================================== */
+let ongoingOn = false;
+function ongoingStart(){
+  if (ongoingOn) return;
+  try {
+    if (window.AliasNative && typeof AliasNative.callOngoing === 'function') {
+      /* 🔴🔴 2026-10-20 — 아이폰 1.4 이하: 음성 통화 시작 때 앱이 소리 설정을 바꾸면 아이폰 마이크가 무음이 됩니다.
+         아이폰 앱의 callOngoing 은 스피커 설정만 하므로, 음성 통화면 부르지 않습니다(1.5 는 앱이 알아서 안 건드림). */
+      const iosOld = AL.isIOSApp && AL.isIOSApp() && !AliasNative.audioV2;
+      if (!(iosOld && callType !== 'video')) AliasNative.callOngoing(peerName(), callType === 'video');
+      ongoingOn = true;
+      /* 🔴 2026-10-20 — 아이폰에서 통화 시작 직후 마이크를 다시 잡던 것은 뺍니다(두 번 잡으면 아이폰이 앞의 것을 막아 더 꼬일 수 있음) */
+    }
+  } catch (e) { console.warn('[call] 통화 중 알림 켜기 실패', e); }
+}
+function ongoingStop(){
+  ongoingOn = false;
+  try {
+    if (window.AliasNative && typeof AliasNative.callEnded === 'function') {
+      AliasNative.callEnded();
+    }
+  } catch (e) { console.warn('[call] 통화 중 알림 끄기 실패', e); }
+}
+
+function peerName(){
+  return (view && (view.peer_label || view.peer_display)) || '상대';
+}
+
+/* ── ① 내가 신청 ───────────────────────────────────────────── */
+function rcAsk(){
+  if (!AL.recSupported()) { setStatus(AL.t('rcNoSupport')); return; }
+  recAskDays = 90;
+  const isVid = (callType === 'video');
+  el('rcBox').innerHTML =
+    '<h3>' + AL.esc(AL.t(isVid ? 'rcAskVid' : 'rcAskTtl')) + '</h3>' +
+    '<p>' + AL.esc(AL.t('rcAskNote')) + '</p>' +
+    (isVid ? '<p style="opacity:.8;font-size:13.5px">' +
+      AL.esc(AL.t('rcAskVidN')) + '</p>' : '') +
+    '<p style="opacity:.75;font-size:13.5px">' + AL.esc(AL.t('rcHowLong')) + '</p>' +
+    '<div class="days">' +
+      REC_DAYS.map(function(d){
+        return '<button data-d="' + d + '"' + (d === 90 ? ' class="on"' : '') + '>' +
+          AL.esc(AL.t('rcDays', { n: d })) + '</button>';
+      }).join('') +
+    '</div>' +
+    '<div class="stack">' +
+      '<button id="rcGo" class="go">' + AL.esc(AL.t('rcSend')) + '</button>' +
+      '<button id="rcNo2">' + AL.esc(AL.t('rcCancel')) + '</button>' +
+    '</div>';
+  rcShow(true);
+
+  el('rcBox').querySelectorAll('[data-d]').forEach(function(b){
+    b.addEventListener('click', function(){
+      recAskDays = Number(b.getAttribute('data-d'));
+      el('rcBox').querySelectorAll('[data-d]').forEach(function(x){
+        x.classList.toggle('on', Number(x.getAttribute('data-d')) === recAskDays);
+      });
+    });
+  });
+  el('rcNo2').addEventListener('click', function(){ rcShow(false); });
+  el('rcGo').addEventListener('click', function(){
+    recAsking = true;
+    AL.sendRec('rec-ask', { days: recAskDays, who: (view && view.my_face) || '',
+                            vid: (callType === 'video') ? 1 : 0 });
+    el('rcBox').innerHTML = '<div class="wait">' + AL.esc(AL.t('rcWaiting')) + '</div>';
+  });
+}
+
+/* ── ② 상대가 신청해 왔을 때 ──────────────────────────────── */
+function rcGot(days, who, vid){
+  const name = who || peerName();
+  const isVid = !!vid || (callType === 'video');
+  /* 제안보다 **짧은 것만** 보여줍니다. 늘리는 길은 없습니다. */
+  const shorter = REC_DAYS.filter(function(d){ return d < days; })
+                          .sort(function(a, b){ return b - a; });
+
+  el('rcBox').innerHTML =
+    '<h3>' + AL.esc(AL.t('rcGotTtl')) + '</h3>' +
+    '<p>' + AL.esc(AL.t(isVid ? 'rcGotVid' : 'rcGotBody', { who: name, n: days })) + '</p>' +
+    '<ul>' +
+      (isVid ? '<li>' + AL.esc(AL.t('rcGotV1')) + '</li>' : '') +
+      '<li>' + AL.esc(AL.t('rcGot1')) + '</li>' +
+      '<li>' + AL.esc(AL.t('rcGot2')) + '</li>' +
+      '<li>' + AL.esc(AL.t('rcGot3')) + '</li>' +
+    '</ul>' +
+    '<div class="stack">' +
+      '<button class="go" data-yes="' + days + '">' +
+        AL.esc(AL.t('rcYes', { who: name })) + '</button>' +
+      shorter.map(function(d){
+        return '<button data-cut="' + d + '">' +
+          AL.esc(AL.t('rcYesShort', { n: d })) + '</button>';
+      }).join('') +
+      '<button class="bad" id="rcRefuse">' + AL.esc(AL.t('rcNo')) + '</button>' +
+    '</div>';
+  rcShow(true);
+
+  el('rcBox').querySelectorAll('[data-yes]').forEach(function(b){
+    b.addEventListener('click', function(){
+      const d = Number(b.getAttribute('data-yes'));
+      AL.sendRec('rec-yes', { days: d });
+      rcShow(false);
+      recStart(d);
+    });
+  });
+  el('rcBox').querySelectorAll('[data-cut]').forEach(function(b){
+    b.addEventListener('click', function(){
+      AL.sendRec('rec-cut', { days: Number(b.getAttribute('data-cut')) });
+      el('rcBox').innerHTML = '<div class="wait">' + AL.esc(AL.t('rcWaiting')) + '</div>';
+    });
+  });
+  el('rcRefuse').addEventListener('click', function(){
+    AL.sendRec('rec-no', {});
+    rcShow(false);
+  });
+}
+
+/* ── ③ 줄여서 왔을 때 — 신청한 쪽에 한 번 더 ─────────────── */
+function rcCut(days){
+  const name = peerName();
+  el('rcBox').innerHTML =
+    '<h3>' + AL.esc(AL.t('rcCutTtl', { n: days })) + '</h3>' +
+    '<p>' + AL.esc(AL.t('rcCutBody', { who: name, n: days })) + '</p>' +
+    '<div class="stack">' +
+      '<button class="go" id="rcCutY">' + AL.esc(AL.t('rcCutYes')) + '</button>' +
+      '<button class="bad" id="rcCutN">' + AL.esc(AL.t('rcCutNo')) + '</button>' +
+    '</div>';
+  rcShow(true);
+
+  el('rcCutY').addEventListener('click', function(){
+    recAsking = false;
+    AL.sendRec('rec-go', { days: days });
+    rcShow(false);
+    recStart(days);
+  });
+  el('rcCutN').addEventListener('click', function(){
+    recAsking = false;
+    AL.sendRec('rec-no', {});
+    rcShow(false);
+    setStatus(AL.t('rcGaveUp'));
+  });
+}
+
+/* ── ④ 담기 시작·멈추기 ──────────────────────────────────── */
+async function recStart(days){
+  try {
+    await AL.startRecording({
+      video: (callType === 'video'),
+      onFull: function(){ recSay(AL.t('rcFull'), true); recFinish(); },
+    });
+    recDays = days;
+    paintRecBar();
+    paintActs();
+  } catch (e) {
+    console.error('[rec] 시작 실패', e);
+    setStatus(e.message || AL.t('rcNoSupport'));
+  }
+}
+
+function paintRecBar(){
+  const bar = el('recBar');
+  if (!bar) return;
+  if (!AL.recording()) { bar.classList.remove('on'); return; }
+  bar.querySelector('span').textContent =
+    AL.t(AL.recordingVideo() ? 'rcOnVid' : 'rcOn', { n: recDays });
+  const sb = el('recStop');
+  if (sb) sb.textContent = AL.t('rcStop');
+  bar.classList.add('on');
+}
+
+/* ⚠ 요소가 없어도 멈추지 않게 합니다(함정 85·111). */
+(function(){
+  var b = el('recStop');
+  if (!b) { console.warn('[rec] recStop 이 없습니다'); return; }
+  b.addEventListener('click', function(){
+    /* ⚠ 멈추기는 **통화를 끊는 게 아닙니다.** 담는 것만 멈춥니다. */
+    AL.sendRec('rec-stop', {});
+    recFinish();
+  });
+})();
+
+/* 멈추고 저장합니다. */
+async function recFinish(){
+  if (!AL.recording()) return;
+  const days = recDays;
+  recDays = null;
+  var _b = el('recBar');
+  if (_b) _b.classList.remove('on');
+
+  const out = await AL.stopRecording();
+  try { paintActs(); } catch (e) {}
+  if (!out || !out.blob || out.blob.size < 2000) { recSay(AL.t('rcStopped'), false); return; }
+
+  try {
+    /* 🔴🔴 2026-09-19 — 통화 번호는 엔진에게 물어봅니다(거는 쪽은 화면이 모릅니다). */
+    const cid = (AL.call && AL.call.callId) || callId;
+    if (!cid) throw new Error('통화 번호를 찾지 못했습니다');
+
+    await AL.saveRecording({
+      linkId: linkId, callId: cid, kind: out.video ? 'video' : 'audio',
+      blob: out.blob, ms: out.ms, days: days, asked: recAskDays,
+    });
+    recDone = true;              // 🔴 통화기록으로 보냅니다
+    recSay(AL.t('rcSaved'), true);
+  } catch (e) {
+    console.error('[rec] 저장 실패', e);
+    recSay(AL.t('rcFailed') + ' — ' + (e.message || ''), false);
+  }
+}
+
+/* 🔴🔴 2026-09-19 — 녹음 결과는 **따로** 보여줍니다. */
+function recSay(msg, ok){
+  const bar = el('recBar');
+  if (!bar) { setStatus(msg); return; }
+  bar.querySelector('span').textContent = msg;
+  const sb = el('recStop');
+  if (sb) sb.style.display = 'none';
+  bar.style.background = ok ? 'rgba(143,227,176,.16)' : 'rgba(255,90,90,.16)';
+  bar.style.color = ok ? '#8FE3B0' : '#FFB4B4';
+  bar.style.borderColor = ok ? 'rgba(143,227,176,.45)' : 'rgba(255,90,90,.45)';
+  bar.classList.add('on');
+}
+
+/* ── 신호 받기 ───────────────────────────────────────────── */
+function onRecSignal(kind, days, who, vid){
+  if (kind === 'rec-ask') { rcGot(Number(days) || 90, who, vid); return; }
+  if (kind === 'rec-yes') {
+    recAsking = false; rcShow(false);
+    recStart(Number(days) || recAskDays); return;
+  }
+  if (kind === 'rec-cut') { rcCut(Number(days) || 15); return; }
+  if (kind === 'rec-go')  { rcShow(false); recStart(Number(days) || 15); return; }
+  if (kind === 'rec-no') {
+    recAsking = false; rcShow(false);
+    setStatus(AL.t('rcRefused')); return;
+  }
+  if (kind === 'rec-stop') { recFinish(); return; }
+}
+
+(async function(){
+  AL.paintText();
+  /* 🔴 2026-09-12 — 영상통화면 제목도 영상으로. paintText 뒤에 덮어씁니다. */
+  if (callType === 'video') document.title = AL.t('clVideo');
+  console.log('[call] 화면 판: 20261005a');
+  if (!await AL.requireLogin()) return;
+  if (!linkId) { setStatus(AL.t('dtlNotFound')); return; }
+
+  await AL.loadDataPrefs();      // 음질·와이파이 설정을 먼저 읽습니다
+
+  const res = await AL.sb.rpc('link_view', { p_link_id: linkId });
+  view = (res.data || [])[0];
+  if (!view) { setStatus(AL.t('dtlNotFound')); return; }
+
+  paintWho();
+  paintActs();
+
+  if (incoming) {
+    /* ── 받는 쪽 ──────────────────────────────────────────────
+       ① 이미 처리한 전화면 다시 안 띄웁니다 (표) */
+    if (once && ticketUsed(once)) {
+      console.log('[call] 이미 쓴 표입니다. 열지 않습니다.', once);
+      if (AL.clearCallNotices) AL.clearCallNotices();
+      goChat(0);
+      return;
+    }
+
+    /* 🔴🔴 2026-09-11 — 이 전화를 "봤다" 고 지금 적어둡니다. */
+    if (AL.markSeenCall) { try { AL.markSeenCall(callId); } catch (e) {} }
+
+    /* ② 🔴 2026-09-10 — 울리기 전에 물어봅니다. 끝난 통화면 한 번도 안 울립니다. */
+    const st = await checkAlreadyOver();
+    if (st === 'over') {
+      if (once) burnTicket(once);
+      if (AL.clearCallNotices) AL.clearCallNotices();
+      console.log('[call] 이미 끝난 전화입니다. 울리지 않습니다.');
+      setStatus(AL.t('clEnded'));
+      el('acts').innerHTML = '';
+      goChat(1200);
+      return;
+    }
+
+    if (once) burnTicket(once);
+
+    /* 🔴 2026-10-05 (2-2) — 이어폰 · 차에서 [거절] 하고 왔으면(decline=1) 곧바로 거절 */
+    if (P.get('decline') === '1') {
+      setStatus(AL.t('clDeclined'));
+      decline();
+      return;
+    }
+
+    /* 🔴🔴 2026-10-05 — 이미 [받기] 를 누르고 왔으면(큰 전화 화면 · 이어폰 · 차) 바로 연결.
+       ⚠ 영상통화는 얼굴이 나가는 일이라 지금처럼 고르시게 둡니다(아래 벨 · 단추로). */
+    if (answeredAlready && callType !== 'video') {
+      setStatus(AL.t('clConnected'));
+      answer({});
+      return;
+    }
+
+    /* 🔴🔴 2026-09-12 — 소리는 안드로이드에게 맡깁니다.
+       앱에서는 알림 채널의 진짜 벨소리가 울립니다. 화면은 **진동만** 냅니다.
+       ⚠ 브라우저에는 알림 채널이 없으므로 화면이 소리를 냅니다. */
+    setStatus(AL.t('clRinging'));
+    AL.startRinging({ quiet: AL.isNativeApp && AL.isNativeApp() });
+    watchCallAlive();      // 🔴 A 가 끊었는지 지켜봅니다 (위 설명)
+
+  } else {
+    /* ── 거는 쪽 ──────────────────────────────────────────────
+       표가 없거나 이미 쓴 표면 걸지 않습니다. 뒤로 가기로 돌아온 경우입니다. */
+    if (!once || ticketUsed(once)) {
+      console.log('[call] 표가 없거나 이미 쓴 표입니다. 걸지 않습니다.', once);
+      if (AL.clearCallNotices) AL.clearCallNotices();
+      goChat(0);
+      return;
+    }
+    burnTicket(once);
+    try {
+      await AL.startCall({
+        linkId: linkId, sideId: view.my_side_id,
+        type: callType, onState: onState,
+        /* 상대 잠금화면에 보일 이름 — 이 관계에서 내가 쓰는 별칭입니다 */
+        myFace: view.my_face || '',
+      });
+      /* 🔴 2026-10-05 (2-4) — 내가 건 통화도 폰에 알립니다(일반 전화가 오면 "대기" 로 다루게) */
+      try {
+        if (window.AliasNative && typeof AliasNative.callStarted === 'function' && AL.call.callId) {
+          AliasNative.callStarted(String(AL.call.callId), peerName());
+        }
+      } catch (e) { console.warn('[call] 폰에 알리기 실패(통화는 그대로)', e); }
+    } catch (e) {
+      /* 🔴🔴 2026-09-12 — 조용히 멈추지 않습니다. */
+      console.error('[call] 걸기 실패', e);
+      setStatus(AL.t('clFailed'));
+      el('bytes').textContent = String((e && e.message) || e).slice(0, 90);
+      el('acts').innerHTML = '';
+      goChat(2600);
+    }
+  }
+})();
+
+/* 🔴 2026-09-10 — 화면을 떠날 때 반드시 정리합니다.
+   ⚠ 안드로이드 웹뷰에서는 beforeunload 가 안 불릴 때가 많아 pagehide 를 같이 답니다. */
+var cleanedUp = false;
+function leaveCleanup(){
+  ongoingStop();          // 🔴 2026-09-22 — 화면이 닫혀도 알림줄은 꺼야 합니다
+  if (cleanedUp) return;
+  cleanedUp = true;
+  if (window.__mediaNudge) { clearInterval(window.__mediaNudge); window.__mediaNudge = null; }
+  try {
+    AL.stopRinging();
+    AL.stopDialTone();
+    stopAliveWatch();
+    if (AL.call.pc) AL.endCall('canceled');
+    else AL.callCleanup();
+  } catch (e) {}
+}
+window.addEventListener('pagehide', leaveCleanup);
+window.addEventListener('beforeunload', leaveCleanup);
+</script>
+</body>
+</html>

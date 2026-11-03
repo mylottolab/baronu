@@ -1,0 +1,710 @@
+/* =====================================================================
+   Alias Next-Gen — 테마
+   2026-09-05
+
+   갈아끼우는 방법: <html> 에 붙는 세 가지 표를 바꾸면 끝입니다.
+     data-mode    dark · light
+     data-color   midnight · paper · forest · dusk · ink
+     data-bubble  round · square · tail · outline
+
+   ⚠ alias_common.css 의 :root 변수를 여기서 덮어씁니다.
+     그래서 이 파일이 alias_common.css 보다 뒤에 와야 합니다.
+
+   ⚠ 색을 새로 만들 때는 아래 아홉 개를 다 채우세요. 하나라도 빠지면
+     앞 테마의 색이 남아서 이상한 조합이 됩니다.
+       --ink --raise --raise2 --line --text --dim --faint --steel --paper
+   ===================================================================== */
+
+/* ── 밤바다 (기본) ──────────────────────────────────────────────── */
+html[data-color="midnight"][data-mode="dark"]{
+  --ink:#0E1621; --raise:#182231; --raise2:#1E2A3B; --line:#27344A;
+  --text:#DDE5F0; --dim:#7E8FA6; --faint:#586A82;
+  --steel:#5B8FC7; --paper:#F2E9D6; --paper-ink:#2A2418; --bad:#D96A6A;
+}
+html[data-color="midnight"][data-mode="light"]{
+  --ink:#EEF2F7; --raise:#FFFFFF; --raise2:#F5F8FC; --line:#D5DEE9;
+  --text:#1A2331; --dim:#5A6B80; --faint:#8093A8;
+  --steel:#2C6BA8; --paper:#2A3442; --paper-ink:#F2E9D6; --bad:#B9483A;
+}
+
+/* ── 종이 — 오래 읽어도 눈이 편합니다 ───────────────────────────── */
+html[data-color="paper"][data-mode="light"]{
+  --ink:#F4F0E6; --raise:#FBF8F1; --raise2:#F0EADC; --line:#DDD4C2;
+  --text:#2B2620; --dim:#6B6154; --faint:#928777;
+  --steel:#96633A; --paper:#2B2620; --paper-ink:#FBF8F1; --bad:#A8503F;
+}
+html[data-color="paper"][data-mode="dark"]{
+  --ink:#1A1712; --raise:#241F18; --raise2:#2E2820; --line:#3D3428;
+  --text:#EDE4D3; --dim:#9A8D77; --faint:#6E6354;
+  --steel:#C79A5E; --paper:#EDE4D3; --paper-ink:#241F18; --bad:#CC7A66;
+}
+
+/* ── 숲 ─────────────────────────────────────────────────────────── */
+html[data-color="forest"][data-mode="dark"]{
+  --ink:#101A15; --raise:#182620; --raise2:#1F3129; --line:#2A3F35;
+  --text:#DCE9E1; --dim:#7D998A; --faint:#587265;
+  --steel:#63B08A; --paper:#E9E2CE; --paper-ink:#1B2620; --bad:#CC7A6E;
+}
+html[data-color="forest"][data-mode="light"]{
+  --ink:#EDF3EF; --raise:#FFFFFF; --raise2:#E6EFE9; --line:#CBDBD2;
+  --text:#17251E; --dim:#4F6A5C; --faint:#7B9689;
+  --steel:#2E7D57; --paper:#1B2620; --paper-ink:#E9E2CE; --bad:#A85045;
+}
+
+/* ── 노을 ───────────────────────────────────────────────────────── */
+html[data-color="dusk"][data-mode="dark"]{
+  --ink:#1A1220; --raise:#251A2E; --raise2:#30223B; --line:#3E2C4B;
+  --text:#EDE0F0; --dim:#A38BAE; --faint:#7A6484;
+  --steel:#D98A6A; --paper:#F5E7DA; --paper-ink:#2A1F26; --bad:#D96A85;
+}
+html[data-color="dusk"][data-mode="light"]{
+  --ink:#F7F0F3; --raise:#FFFFFF; --raise2:#F2E8EE; --line:#E0CFD9;
+  --text:#2A1C26; --dim:#6E5566; --faint:#96808E;
+  --steel:#B85C38; --paper:#2A1F26; --paper-ink:#F5E7DA; --bad:#B33E5C;
+}
+
+/* ── 먹 — 검정과 흰색만 씁니다 ──────────────────────────────────── */
+html[data-color="ink"][data-mode="dark"]{
+  --ink:#121212; --raise:#1C1C1C; --raise2:#262626; --line:#333333;
+  --text:#E8E8E8; --dim:#909090; --faint:#666666;
+  --steel:#BFBFBF; --paper:#E8E8E8; --paper-ink:#1C1C1C; --bad:#C97070;
+}
+html[data-color="ink"][data-mode="light"]{
+  --ink:#F2F2F2; --raise:#FFFFFF; --raise2:#EAEAEA; --line:#D4D4D4;
+  --text:#1A1A1A; --dim:#5E5E5E; --faint:#8A8A8A;
+  --steel:#3D3D3D; --paper:#1A1A1A; --paper-ink:#F2F2F2; --bad:#A33F3F;
+}
+
+/* ── 칠흑 — OLED 화면에서 배터리를 아낍니다 ────────────────────── */
+html[data-color="pitch"][data-mode="dark"]{
+  --ink:#000000; --raise:#0B0B0B; --raise2:#141414; --line:#1F1F1F;
+  --text:#E4E4E4; --dim:#7A7A7A; --faint:#525252;
+  --steel:#7FB0E0; --paper:#E4E4E4; --paper-ink:#0B0B0B; --bad:#D96A6A;
+}
+html[data-color="pitch"][data-mode="light"]{
+  --ink:#FAFAFA; --raise:#FFFFFF; --raise2:#F0F0F0; --line:#D8D8D8;
+  --text:#111111; --dim:#555555; --faint:#888888;
+  --steel:#1F4E7A; --paper:#111111; --paper-ink:#FAFAFA; --bad:#A33F3F;
+}
+
+/* ── 심해 — 아주 진한 남색 ──────────────────────────────────────── */
+html[data-color="abyss"][data-mode="dark"]{
+  --ink:#050B14; --raise:#0B1622; --raise2:#122032; --line:#1B2C42;
+  --text:#D2E0EE; --dim:#6E8399; --faint:#4A5D73;
+  --steel:#3E9BD4; --paper:#DCE8F2; --paper-ink:#0B1622; --bad:#D9636E;
+}
+html[data-color="abyss"][data-mode="light"]{
+  --ink:#EAF0F6; --raise:#FFFFFF; --raise2:#DFE9F2; --line:#C2D3E2;
+  --text:#0A1622; --dim:#42586E; --faint:#6E8399;
+  --steel:#0F5F92; --paper:#0B1622; --paper-ink:#DCE8F2; --bad:#A83945;
+}
+
+/* ── 자정 — 밤바다보다 두 단계 어둡습니다 ───────────────────────── */
+html[data-color="midnite"][data-mode="dark"]{
+  --ink:#070A0F; --raise:#0E131B; --raise2:#151C27; --line:#1E2733;
+  --text:#D6DCE6; --dim:#6F7C8C; --faint:#4B5766;
+  --steel:#5B8FC7; --paper:#E8E2D4; --paper-ink:#0E131B; --bad:#CC6060;
+}
+html[data-color="midnite"][data-mode="light"]{
+  --ink:#F1F3F6; --raise:#FFFFFF; --raise2:#E7EAEF; --line:#CBD1DA;
+  --text:#10141A; --dim:#4A5561; --faint:#78838F;
+  --steel:#2C4F7A; --paper:#10141A; --paper-ink:#E8E2D4; --bad:#A34545;
+}
+
+/* ── 숯 — 따뜻한 회색 ───────────────────────────────────────────── */
+html[data-color="charcoal"][data-mode="dark"]{
+  --ink:#12100E; --raise:#1B1815; --raise2:#242019; --line:#302A22;
+  --text:#E6E0D6; --dim:#8C8377; --faint:#635C52;
+  --steel:#C9A87C; --paper:#E6E0D6; --paper-ink:#1B1815; --bad:#CC7A66;
+}
+html[data-color="charcoal"][data-mode="light"]{
+  --ink:#F5F2ED; --raise:#FFFFFF; --raise2:#EDE8E0; --line:#D6CFC3;
+  --text:#1A1713; --dim:#5C544A; --faint:#8C8377;
+  --steel:#8A6A3E; --paper:#1A1713; --paper-ink:#E6E0D6; --bad:#A3503F;
+}
+
+/* ── 청회 — 카카오톡 기본 배경 계열. 주간이 본체입니다 ──────────────
+   ⚠ 2026-09-08 신설. "지금 색들이 주간·야간 모두 흐릿하다"는 의견을 받아
+     글자를 기존 테마보다 한 단계 진하게, 흐린 글자(dim·faint)도 밝게 잡았습니다. */
+html[data-color="bluegrey"][data-mode="light"]{
+  --ink:#B2C7D9; --raise:#FFFFFF; --raise2:#C6D6E3; --line:#8FAAC3;
+  --text:#101820; --dim:#374B5F; --faint:#5E7389;
+  --steel:#1F5D93; --paper:#101820; --paper-ink:#EAF1F7; --bad:#A8323C;
+}
+html[data-color="bluegrey"][data-mode="dark"]{
+  --ink:#141C24; --raise:#1E2831; --raise2:#26323D; --line:#354451;
+  --text:#E9F0F6; --dim:#9AACBC; --faint:#718499;
+  --steel:#6FA8DC; --paper:#E9F0F6; --paper-ink:#1E2831; --bad:#E07A7A;
+}
+
+/* ── 풀빛 — Aliascall 대화창 연녹색 계열. 주간이 본체입니다 ───────── */
+html[data-color="sage"][data-mode="light"]{
+  --ink:#CBDDC7; --raise:#FFFFFF; --raise2:#DCEAD8; --line:#A2BE9D;
+  --text:#121F17; --dim:#385243; --faint:#5F7A69;
+  --steel:#26695A; --paper:#121F17; --paper-ink:#ECF3EA; --bad:#A3413C;
+}
+html[data-color="sage"][data-mode="dark"]{
+  --ink:#171E19; --raise:#212A23; --raise2:#2A352C; --line:#3A483B;
+  --text:#EAF1E8; --dim:#A1B4A1; --faint:#788A76;
+  --steel:#8FC79E; --paper:#EAF1E8; --paper-ink:#212A23; --bad:#DE8078;
+}
+
+/* ── 모래 — 온화한 붉은 기가 도는 베이지 ───────────────────────────
+   ⚠ 2026-09-08 신설. '종이'보다 붉은 쪽으로 기울였습니다. */
+html[data-color="sand"][data-mode="light"]{
+  --ink:#EFE1D4; --raise:#FDF7F1; --raise2:#E6D5C5; --line:#C9B29C;
+  --text:#241A13; --dim:#5C4636; --faint:#87705E;
+  --steel:#9C4F32; --paper:#241A13; --paper-ink:#FDF7F1; --bad:#A83A34;
+}
+html[data-color="sand"][data-mode="dark"]{
+  --ink:#1C1613; --raise:#271F1A; --raise2:#332822; --line:#42332B;
+  --text:#F0E4D9; --dim:#B09788; --faint:#846F62;
+  --steel:#D98A62; --paper:#F0E4D9; --paper-ink:#271F1A; --bad:#DE7B72;
+}
+
+/* ── 황토 — 모래보다 진한 흙빛 갈색 ──────────────────────────────── */
+html[data-color="clay"][data-mode="light"]{
+  --ink:#D9BFA8; --raise:#F6EBE0; --raise2:#CBAD93; --line:#A9866A;
+  --text:#1E1409; --dim:#523A26; --faint:#7A5D46;
+  --steel:#8A3A22; --paper:#1E1409; --paper-ink:#F6EBE0; --bad:#932B26;
+}
+html[data-color="clay"][data-mode="dark"]{
+  --ink:#1A120C; --raise:#251A12; --raise2:#31231A; --line:#412E22;
+  --text:#F2E2D2; --dim:#B7957C; --faint:#8A6D58;
+  --steel:#D97F4A; --paper:#F2E2D2; --paper-ink:#251A12; --bad:#DE7060;
+}
+
+/* ── 진한 청회 — 청회를 양쪽 다 한 단계 눌렀습니다 ────────────────── */
+html[data-color="bluegrey2"][data-mode="light"]{
+  --ink:#8CA9C2; --raise:#F0F5F9; --raise2:#7C9BB6; --line:#5E7F9C;
+  --text:#08111A; --dim:#22384C; --faint:#41586E;
+  --steel:#123F68; --paper:#08111A; --paper-ink:#F0F5F9; --bad:#8C232D;
+}
+html[data-color="bluegrey2"][data-mode="dark"]{
+  --ink:#080D13; --raise:#111820; --raise2:#18212B; --line:#22303C;
+  --text:#F0F6FB; --dim:#A6B8C8; --faint:#7C8FA1;
+  --steel:#5C9BD6; --paper:#F0F6FB; --paper-ink:#111820; --bad:#E06868;
+}
+
+/* ── 진한 풀빛 — 풀빛을 양쪽 다 한 단계 눌렀습니다 ────────────────── */
+html[data-color="sage2"][data-mode="light"]{
+  --ink:#A8C4A2; --raise:#F1F7EF; --raise2:#96B690; --line:#739C6D;
+  --text:#0A1610; --dim:#25402F; --faint:#456049;
+  --steel:#15503F; --paper:#0A1610; --paper-ink:#F1F7EF; --bad:#8C2B28;
+}
+html[data-color="sage2"][data-mode="dark"]{
+  --ink:#0C120E; --raise:#151D17; --raise2:#1D281F; --line:#2A382C;
+  --text:#EFF6ED; --dim:#A5BBA4; --faint:#7C9179;
+  --steel:#7ECB93; --paper:#EFF6ED; --paper-ink:#151D17; --bad:#E07A70;
+}
+
+/* 밝은 테마에서는 파란 단추 위 글자가 어두워야 합니다 */
+html[data-mode="light"] .btn,
+html[data-mode="light"] .plusbtn,
+html[data-mode="light"] .chat-foot .send,
+html[data-mode="light"] .bigacts button,
+html[data-mode="light"] .msg.out .bub,
+html[data-mode="light"] .pk-form .pk-go,
+html[data-mode="light"] .tb-badge,
+html[data-mode="light"] .unread{ color:#FFFFFF; }
+html[data-mode="light"] .btn.ghost,
+html[data-mode="light"] .bigacts button.sec{ color:var(--text); }
+
+
+/* =====================================================================
+   말풍선 모양
+   ===================================================================== */
+html[data-bubble="square"] .bub{ border-radius:5px; }
+
+html[data-bubble="outline"] .msg.out .bub{
+  background:transparent; color:var(--text);
+  border:1px solid var(--steel);
+}
+html[data-bubble="outline"] .msg.in .bub{ background:transparent; }
+
+html[data-bubble="tail"] .bub{ position:relative; border-radius:14px; }
+html[data-bubble="tail"] .msg.out .bub::after,
+html[data-bubble="tail"] .msg.in .bub::after{
+  content:''; position:absolute; bottom:6px;
+  width:0; height:0; border:7px solid transparent;
+}
+html[data-bubble="tail"] .msg.out .bub::after{
+  right:-11px; border-left-color:var(--steel); border-right:0;
+}
+html[data-bubble="tail"] .msg.in .bub::after{
+  left:-11px; border-right-color:var(--raise); border-left:0;
+}
+
+
+/* =====================================================================
+   날씨 배경
+   ⚠ 움직이는 배경은 배터리를 먹습니다. 대화창은 오래 켜두는 화면이라
+     기본은 none 입니다. 켜고 싶은 사람만 켭니다.
+   ⚠ 손님이 "동작 줄이기"를 켜두었으면 아예 안 움직입니다(맨 아래).
+   ===================================================================== */
+.scene{
+  position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden;
+}
+.scene i{
+  position:absolute; top:-10%; display:block;
+  will-change:transform;
+}
+
+/* 눈 */
+.scene.snow i{
+  width:6px; height:6px; border-radius:50%;
+  background:var(--text); opacity:.28;
+  animation:fall linear infinite;
+}
+/* 비 */
+.scene.rain i{
+  width:1px; height:16px;
+  background:linear-gradient(transparent, var(--steel));
+  opacity:.35;
+  animation:fall linear infinite;
+}
+/* 벚꽃 */
+.scene.petals i{
+  width:9px; height:7px; border-radius:60% 20% 60% 20%;
+  background:var(--steel); opacity:.3;
+  animation:sway linear infinite;
+}
+/* 별 — 유일하게 안 떨어집니다 */
+.scene.stars i{
+  top:auto; width:2px; height:2px; border-radius:50%;
+  background:var(--text); opacity:.4;
+  animation:twinkle ease-in-out infinite alternate;
+}
+
+@keyframes fall{
+  from{ transform:translateY(0) translateX(0); }
+  to{ transform:translateY(112vh) translateX(24px); }
+}
+@keyframes sway{
+  from{ transform:translateY(0) translateX(0) rotate(0deg); }
+  to{ transform:translateY(112vh) translateX(-70px) rotate(340deg); }
+}
+@keyframes twinkle{
+  from{ opacity:.12; }
+  to{ opacity:.55; }
+}
+
+/* =====================================================================
+   계절 그림 — 떨어지는 것만으로는 밋밋합니다.
+   눈이면 눈사람, 비면 우산처럼 바닥에 하나씩 놓습니다.
+
+   ⚠ 그림 파일을 쓰지 않습니다. 도형으로 그립니다.
+     파일을 받아오면 느리고, 테마 색과도 안 맞습니다.
+   ⚠ 아주 옅게 둡니다. 대화가 주인공이지 배경이 주인공이 아닙니다.
+   ===================================================================== */
+.scene .prop{
+  position:absolute; bottom:0; pointer-events:none;
+  opacity:.14; color:var(--text);
+}
+/* ⚠ 좁은 화면에서는 그림이 대화를 가립니다. 더 옅게 하고 하나만 남깁니다. */
+@media (max-width: 520px){
+  .scene .prop{ opacity:.10; }
+  .scene .prop:nth-of-type(n+3){ display:none; }
+}
+.scene .prop svg{ display:block; }
+
+/* 바닥에 쌓인 것 */
+.scene .ground{
+  position:absolute; left:0; right:0; bottom:0; height:46px;
+  background:var(--text); opacity:.05;
+  border-radius:50% 50% 0 0 / 26px 26px 0 0;
+  pointer-events:none;
+}
+.scene.rain .ground{ height:20px; opacity:.07; border-radius:0; }
+
+/* 배경 위에 내용이 오게 */
+/* 🔴 2026-10-14 — .tabbar · .sheet · .sheet-bg 는 빼야 합니다.
+   이 셋은 화면에 고정(position:fixed)이어야 하는데, 여기서 relative 로 덮어써서
+   연락처의 [+] 를 눌러도 메뉴가 화면 맨 아래(목록 끝)에 붙어 안 보였습니다.
+   고정된 것들은 이미 z-index 가 있어 배경(.scene, z-index:-1) 위에 옵니다. */
+body > .wrap, body > .chat-wrap{ position:relative; z-index:1; }
+
+@media (prefers-reduced-motion: reduce){
+  .scene{ display:none; }
+}
+
+
+/* =====================================================================
+   테마 고르는 화면
+   ===================================================================== */
+.swatches{ display:flex; flex-wrap:wrap; gap:9px; margin-top:4px; }
+.sw{
+  display:flex; align-items:center; gap:8px;
+  padding:9px 13px; font-size:13px; font-family:inherit;
+  background:var(--raise2); color:var(--text);
+  border:1px solid var(--line); border-radius:20px; cursor:pointer;
+}
+.sw.on{ border-color:var(--steel); color:var(--steel); }
+.sw .dot{
+  width:14px; height:14px; border-radius:50%;
+  border:1px solid rgba(128,128,128,.35); flex-shrink:0;
+}
+.sw-midnight .dot{ background:#182231; }
+.sw-paper    .dot{ background:#E4DAC6; }
+.sw-forest   .dot{ background:#1F3129; }
+.sw-dusk     .dot{ background:#30223B; }
+.sw-ink      .dot{ background:#5E5E5E; }
+
+.preview{
+  margin-top:14px; padding:15px;
+  background:var(--ink); border:1px solid var(--line); border-radius:12px;
+}
+.preview .msg{ margin-bottom:8px; }
+.preview .bub{ font-size:13px; padding:8px 11px; }
+
+/* 새 색의 미리보기 점 */
+.sw-pitch    .dot{ background:#0B0B0B; }
+.sw-abyss    .dot{ background:#0B1622; }
+.sw-midnite  .dot{ background:#0E131B; }
+.sw-charcoal .dot{ background:#1B1815; }
+
+/* 2026-09-08 신설 — 이 둘은 주간이 본체라 밝은 쪽 색을 점으로 씁니다 */
+.sw-bluegrey .dot{ background:#B2C7D9; }
+.sw-sage     .dot{ background:#CBDDC7; }
+
+/* 2026-09-08 2차 — 붉은·갈색 계열 둘, 진하게 한 것 둘 */
+.sw-sand      .dot{ background:#EFE1D4; }
+.sw-clay      .dot{ background:#D9BFA8; }
+.sw-bluegrey2 .dot{ background:#8CA9C2; }
+.sw-sage2     .dot{ background:#A8C4A2; }
+
+/* =====================================================================
+   Alias Next-Gen — 또렷하게 읽히는 테마 셋 + 글씨 크기·굵기
+   2026-09-19
+
+   ⚠ 이 내용을 **alias_theme.css 맨 아래에 붙여넣으세요.**
+     따로 파일을 늘리면 화면마다 <link> 를 하나씩 더 달아야 합니다.
+
+   왜 만들었나
+     "주간 바탕색이 너무 연해서 읽기 불편하다" 는 말씀을 들었습니다.
+     지금 주간 테마들은 바탕이 거의 흰색(#EEF2F7)인데 부제와 시각은
+     회색(--dim)입니다. **밝은 데서 보면 회색 글씨가 날아갑니다.**
+
+   ⚠ 색을 예쁘게 고르는 게 아니라 **글씨와 바탕의 차이**를 키워야
+     합니다. 아래 셋은 그 차이를 일부러 크게 잡았습니다.
+       --dim 과 --faint 를 기존 테마보다 훨씬 진하게 두었습니다.
+   ===================================================================== */
+
+/* ── 또렷 — 흰 바탕에 먹색 글씨. 가장 잘 읽힙니다 ─────────────────
+   ⚠ 바탕은 밝게 두되 **글씨를 끝까지 진하게** 잡았습니다.
+     부제(--dim)까지 거의 검정에 가깝습니다. */
+html[data-color="crisp"][data-mode="light"]{
+  --ink:#E8ECF1; --raise:#FFFFFF; --raise2:#F2F5F9; --line:#B9C4D1;
+  --text:#000000; --dim:#2B3440; --faint:#4A5663;
+  --steel:#144E86; --paper:#000000; --paper-ink:#FFFFFF; --bad:#9E2A22;
+}
+html[data-color="crisp"][data-mode="dark"]{
+  --ink:#0A0D11; --raise:#151A20; --raise2:#1D242C; --line:#38434F;
+  --text:#FFFFFF; --dim:#C2CCD6; --faint:#9AA6B2;
+  --steel:#8CC2F0; --paper:#FFFFFF; --paper-ink:#151A20; --bad:#F08B8B;
+}
+
+/* ── 크림 — 아이보리 바탕에 진한 갈색. 눈이 덜 부십니다 ──────────
+   ⚠ 흰 바탕이 눈부시다는 분께 권합니다. 오래 봐도 편합니다. */
+html[data-color="cream"][data-mode="light"]{
+  --ink:#E8DFC9; --raise:#FBF6E9; --raise2:#DDD2B7; --line:#B5A886;
+  --text:#14100A; --dim:#3D3322; --faint:#5E5138;
+  --steel:#7A4A16; --paper:#14100A; --paper-ink:#FBF6E9; --bad:#8C2C20;
+}
+html[data-color="cream"][data-mode="dark"]{
+  --ink:#16130D; --raise:#201C14; --raise2:#2B251A; --line:#3E3524;
+  --text:#F8F1DE; --dim:#CBBC9A; --faint:#A29376;
+  --steel:#E0A85C; --paper:#F8F1DE; --paper-ink:#201C14; --bad:#E58877;
+}
+
+/* ── 진회 — 바탕을 한참 눌러 글씨가 도드라집니다 ─────────────────
+   ⚠ 밝은 데(햇빛 아래)에서 제일 잘 읽힙니다. */
+html[data-color="slate"][data-mode="light"]{
+  --ink:#9AA6B4; --raise:#FDFEFF; --raise2:#8B98A8; --line:#69788A;
+  --text:#05090D; --dim:#1C2530; --faint:#36424F;
+  --steel:#0D3D66; --paper:#05090D; --paper-ink:#FDFEFF; --bad:#7E1E18;
+}
+html[data-color="slate"][data-mode="dark"]{
+  --ink:#04060A; --raise:#0D1218; --raise2:#151C24; --line:#26313D;
+  --text:#FFFFFF; --dim:#B8C4D0; --faint:#8E9BA8;
+  --steel:#6FB0EC; --paper:#FFFFFF; --paper-ink:#0D1218; --bad:#EE8080;
+}
+
+/* ── 흰색 — 바탕 전체를 흰색으로 (🔴 2026-10-21 손님 요청) · 늘 주간으로 보입니다 ── */
+html[data-color="white"][data-mode="light"], html[data-color="white"][data-mode="dark"]{
+  --ink:#FFFFFF; --raise:#FFFFFF; --raise2:#F3F4F6; --line:#C9CED6;
+  --text:#000000; --dim:#2B3440; --faint:#4A5663;
+  --steel:#144E86; --paper:#000000; --paper-ink:#FFFFFF; --bad:#9E2A22;
+}
+
+/* 고르는 화면의 미리보기 점 */
+.sw-white .dot{ background:#FFFFFF; box-shadow:inset 0 0 0 1px #9AA3AE; }
+.sw-crisp .dot{ background:#E8ECF1; }
+.sw-cream .dot{ background:#E8DFC9; }
+.sw-slate .dot{ background:#9AA6B4; }
+
+
+/* =====================================================================
+   글씨 크기
+   2026-09-19
+
+   ⚠ 이 앱의 CSS 는 크기를 px 로 박아두어서, 글씨 크기만 따로 키우면
+     칸이 안 늘어나고 글씨가 넘칩니다. 그래서 **화면 전체를 확대**하는
+     방식을 씁니다(zoom). 글씨·칸·간격이 함께 커져 모양이 안 깨집니다.
+
+   ⚠ 아주 크게는 125% 입니다. 그 이상은 한 줄에 몇 글자 안 들어가
+     오히려 읽기 나빠집니다.
+   ===================================================================== */
+html[data-fs="lg"]  body{ zoom:1.12; }
+html[data-fs="xl"]  body{ zoom:1.25; }
+
+/* ⚠ 통화화면과 전체화면은 확대하지 않습니다. 단추가 화면 밖으로
+   밀려나면 전화를 못 받습니다. */
+html[data-fs] body.callbody,
+html[data-fs] body.fullbody{ zoom:1; }
+
+
+/* =====================================================================
+   글씨 굵기
+   2026-09-19
+
+   ⚠ 가는 글씨가 흐려 보이는 주된 원인입니다. 색을 안 바꾸고도
+     "진해진" 느낌을 줍니다. 눈이 불편하신 분께 효과가 큽니다.
+   ===================================================================== */
+html[data-fw="bold"] body{ font-weight:600; }
+html[data-fw="bold"] .csub,
+html[data-fw="bold"] .cprev,
+html[data-fw="bold"] .ctime,
+html[data-fw="bold"] .note,
+html[data-fw="bold"] .hint,
+html[data-fw="bold"] .lede{ font-weight:600; }
+
+/* ⚠ 이미 굵은 것은 더 굵게 하지 않습니다. 뭉개집니다. */
+html[data-fw="bold"] b,
+html[data-fw="bold"] strong,
+html[data-fw="bold"] .cname,
+html[data-fw="bold"] h1, html[data-fw="bold"] h2,
+html[data-fw="bold"] h3{ font-weight:800; }
+
+/* =====================================================================
+   글씨체
+   2026-09-19
+
+   🔴 **폰에 이미 있는 글꼴만** 씁니다. 받아오지 않습니다.
+
+   왜 안 받아오나
+     한글 글꼴은 글자 수가 많아 파일이 1~5MB 입니다. 영어 글꼴의 오십
+     배가 넘습니다. 서너 가지를 준비하면 손님이 처음 켤 때 10MB 를
+     받아야 하고, 느린 데서는 한참 글씨가 안 보입니다.
+     그리고 글꼴마다 "앱에 넣어 배포해도 되는가" 를 따로 확인해야
+     합니다. "무료" 라고 적혀 있어도 그건 별개인 경우가 많습니다.
+
+   ⚠ 폰마다 있는 글꼴이 다릅니다. 갤럭시에서 곱게 보이는 것이 다른
+     폰에서는 안 보일 수 있습니다. 그래서 **여러 이름을 줄줄이 적어**
+     되는 것을 쓰게 합니다. 맨 뒤의 sans-serif 는 무슨 폰이든 있습니다.
+
+   ⚠ 기본(system)은 아무것도 지정하지 않습니다. 손님이 **폰 설정에서
+     고른 글씨체**를 그대로 따르는 것이 가장 편합니다. 눈이 불편하신
+     분은 대개 폰 전체를 이미 맞춰두셨습니다.
+   ===================================================================== */
+
+/* 고딕 — 각지고 또렷합니다. 작은 글씨에서 제일 잘 읽힙니다. */
+html[data-font="gothic"] body{
+  font-family:
+    'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic',
+    'Nanum Gothic', 'Droid Sans Fallback', 'Roboto',
+    system-ui, sans-serif;
+}
+
+/* 명조 — 획이 가늘고 단정합니다. 긴 글을 읽기 좋습니다.
+   ⚠ 작은 글씨에서는 흐려 보입니다. 크기를 함께 키우시길 권합니다. */
+html[data-font="myeongjo"] body{
+  font-family:
+    'Noto Serif KR', 'Nanum Myeongjo', 'Apple SD Gothic Neo',
+    'Batang', 'Serif', serif;
+}
+
+/* 돋움 — 옛 한글 화면 글꼴. 익숙한 분들이 계십니다. */
+html[data-font="dotum"] body{
+  font-family:
+    'Dotum', '돋움', 'Gulim', '굴림', 'Malgun Gothic',
+    system-ui, sans-serif;
+}
+
+/* 손글씨 — 대화창을 부드럽게. 폰에 없으면 기본으로 돌아갑니다.
+   ⚠ 읽기 편하려고 쓰는 게 아닙니다. 눈이 불편하시면 고딕을 쓰세요. */
+html[data-font="hand"] body{
+  font-family:
+    'Nanum Pen Script', 'Gaegu', 'Cute Font',
+    'Comic Sans MS', cursive, system-ui, sans-serif;
+}
+
+/* ⚠ 숫자와 코드는 글씨체를 안 바꿉니다. 초대 코드에서 0 과 O,
+   1 과 l 이 헷갈리면 못 씁니다. */
+html[data-font] .code,
+html[data-font] .mono,
+html[data-font] code{
+  font-family: ui-monospace, 'Courier New', monospace !important;
+}
+/* =====================================================================
+   부름 — 주간 모드 글씨 진하게  (2026-09-24 추가분만)
+
+   ⚠ 이 내용을 **alias_theme.css 맨 아래에 붙여넣으세요.**
+   ⚠ 9/19 에 드린 alias_theme_add.css 는 이미 붙이셨을 테니,
+     여기 있는 것만 **이어서** 붙이시면 됩니다. 두 번 붙이지 마세요.
+   ===================================================================== */
+
+/* =====================================================================
+   🔴🔴 2026-09-24 — 주간 모드에서 연한 글씨가 안 보이던 것
+
+   무엇이 문제였나
+     연락처의 "같은 상대와 여러 번 이어졌습니다", 화면 위아래의 띠들이
+     **연한 파랑·형광 녹색**으로 되어 있었습니다. 어두운 바탕에서는
+     잘 보이는데, **밝은 바탕에서는 거의 안 보입니다.**
+     손님들이 그 안내를 읽지 못하셨습니다(2026-09-24 지적).
+
+   어떻게
+     야간 모드는 그대로 두고, **주간 모드에서만** 글씨를 진하게 바꿉니다.
+     뜻은 남기되(잘됨=초록, 주의=갈색, 나쁨=빨강) 어둡게 눌렀습니다.
+
+   ⚠ 어두운 창(메뉴·시트·재생기) 안의 글씨는 건드리지 않습니다.
+     거기는 주간 모드에서도 바탕이 어두워서, 글씨까지 어둡게 하면
+     아무것도 안 보입니다.
+
+   ⚠ !important 를 씁니다. 이 색들이 화면 파일 안에 박혀 있어서
+     그러지 않으면 안 먹습니다.
+   ===================================================================== */
+
+/* ── 잘됨 · 안내 (형광 녹색 → 짙은 초록) ─────────────────────────── */
+html[data-mode="light"] .ok,
+html[data-mode="light"] #twin,
+html[data-mode="light"] #planBar.trial,
+html[data-mode="light"] .spd{
+  color:#14532D !important;
+}
+html[data-mode="light"] #twin,
+html[data-mode="light"] .ok{
+  background:rgba(20,83,45,.10) !important;
+  border-color:rgba(20,83,45,.30) !important;
+}
+
+/* ── 주의 (노랑 → 짙은 갈색) ─────────────────────────────────────── */
+html[data-mode="light"] #expBar,
+html[data-mode="light"] #pushBar,
+html[data-mode="light"] #planBar.over{
+  color:#7A4A00 !important;
+  background:rgba(122,74,0,.10) !important;
+  border-color:rgba(122,74,0,.32) !important;
+}
+html[data-mode="light"] .star{ color:#B45309 !important; }
+
+/* ── 나쁨 · 급함 (연한 빨강 → 짙은 빨강) ─────────────────────────── */
+html[data-mode="light"] .err,
+html[data-mode="light"] #delBar,
+html[data-mode="light"] #stateBar,
+html[data-mode="light"] #recBar{
+  color:#8C1D18 !important;
+  background:rgba(140,29,24,.09) !important;
+  border-color:rgba(140,29,24,.32) !important;
+}
+
+/* ── 조용한 줄 (회색 → 읽을 수 있는 짙은 회색) ───────────────────── */
+html[data-mode="light"] .hint,
+html[data-mode="light"] .note,
+html[data-mode="light"] .gnote,
+html[data-mode="light"] .csub,
+html[data-mode="light"] #planBar.calm{
+  color:#3F4A57 !important;
+  opacity:1 !important;
+}
+
+/* ── 화면 안에 색을 직접 적어둔 곳 ───────────────────────────────
+   ⚠ style="color:#8FE3B0" 처럼 박아둔 자리입니다. 어두운 창 안의 것은
+     아래에서 되돌립니다. */
+html[data-mode="light"] [style*="#8FE3B0"]{ color:#14532D !important; }
+html[data-mode="light"] [style*="#F2C94C"]{ color:#7A4A00 !important; }
+html[data-mode="light"] [style*="#FFB4B4"]{ color:#8C1D18 !important; }
+html[data-mode="light"] [style*="#94A3B8"],
+html[data-mode="light"] [style*="#7E8FA6"]{ color:#3F4A57 !important; }
+
+/* ── 🔴 어두운 창 안은 되돌립니다 ────────────────────────────────
+   메뉴·시트·재생기·통화 협의 창은 주간 모드에서도 바탕이 어둡습니다.
+   여기까지 어둡게 하면 검은 바탕에 검은 글씨가 됩니다. */
+html[data-mode="light"] #popmenu [style*="#8FE3B0"],
+html[data-mode="light"] #popmenu .cur,
+html[data-mode="light"] #rcBox [style*="#8FE3B0"],
+html[data-mode="light"] #rcBox .go,
+html[data-mode="light"] #rpBox [style*="#8FE3B0"],
+html[data-mode="light"] #rpBox #rpSave,
+html[data-mode="light"] .pk [style*="#8FE3B0"],
+html[data-mode="light"] .pk .pk-go{
+  color:#8FE3B0 !important;
+  background:rgba(143,227,176,.2) !important;
+}
+html[data-mode="light"] #rcBox .bad,
+html[data-mode="light"] .pk .pk-err{
+  color:#FFB4B4 !important;
+  background:rgba(255,120,120,.15) !important;
+}
+html[data-mode="light"] #popmenu button,
+html[data-mode="light"] #rcBox,
+html[data-mode="light"] #rpBox{
+  color:#DDE5F0;
+}
+
+/* 🔴 2026-10-21 — 얼굴표(이름 첫 글자 그림)를 밝은 바탕에서 진하게 */
+html[data-mode="light"] [style*="--fh"]{
+  color:hsl(var(--fh),65%,32%) !important;
+  background-color:hsla(var(--fh),60%,50%,.16) !important;
+  border-color:hsla(var(--fh),55%,40%,.45) !important;
+}
+
+/* =====================================================================
+   🔴 2026-10-21 흰색 · 하늘 대화창 (손님 요청 — 널리 익숙한 메신저 배색)
+   목록 화면(연락처 · 전화번호부 · 나 …)  흰 바탕 #FFFFFF · 검정 글씨
+   대화창                                  회색빛 하늘색 #B2C7D9
+     받은 말풍선  흰색 #FFFFFF            보낸 말풍선  노랑 #FFE45C (글씨 #191919)
+     위 · 아래 줄  같은 하늘색 / 입력칸 흰색    시각 · 날짜 글씨 #4A5866
+   ===================================================================== */
+html[data-color="sky"][data-mode="light"], html[data-color="sky"][data-mode="dark"]{
+  --ink:#FFFFFF; --raise:#FFFFFF; --raise2:#F2F3F5; --line:#D5D9DE;
+  --text:#191919; --dim:#3C4650; --faint:#5A6470;
+  --steel:#2F6FB0; --paper:#191919; --paper-ink:#FFFFFF; --bad:#C0392B;
+}
+html[data-color="sky"] body.chat{
+  --ink:#B2C7D9; --raise:#B2C7D9; --raise2:#A3B9CD; --line:#9CB1C5;
+  --dim:#2E3A46; --faint:#4A5866;
+  background:#B2C7D9;
+}
+html[data-color="sky"] body.chat .chat-top{ background:#B2C7D9; border-bottom-color:transparent; }
+html[data-color="sky"] body.chat .chat-body{ background:#B2C7D9; }
+html[data-color="sky"] body.chat .chat-foot{ background:#FFFFFF; border-top:1px solid #D5D9DE; }
+html[data-color="sky"] body.chat .chat-foot textarea{ background:#F2F3F5; color:#191919; border-color:#E1E4E8; }
+html[data-color="sky"] body.chat .chat-foot textarea::placeholder{ color:#8A939C; }
+html[data-color="sky"] body.chat .msg.in .bub{ background:#FFFFFF; color:#191919; border-color:transparent; }
+html[data-color="sky"] body.chat .msg.out .bub{ background:#FFE45C; color:#191919; border-color:transparent; }
+html[data-color="sky"] body.chat .daysep{ color:#3C4A58; }
+.sw-sky .dot{ background:linear-gradient(90deg,#FFFFFF 50%,#B2C7D9 50%); box-shadow:inset 0 0 0 1px #9AA3AE; }
+
+/* 🔴 2026-10-21 — 흰색 · 하늘 대화창: 시각 · 부제 글씨를 더 진하게(흰 바탕에서 또렷이) */
+html[data-color="white"], html[data-color="sky"]{ --dim:#1F2730 !important; --faint:#2E3842 !important; }
+html[data-color="white"] .ctime, html[data-color="sky"] .ctime,
+html[data-color="white"] .psub, html[data-color="sky"] .psub,
+html[data-color="white"] .cmine, html[data-color="sky"] .cmine,
+html[data-color="white"] .csub, html[data-color="sky"] .csub,
+html[data-color="white"] .cprev, html[data-color="sky"] .cprev{ color:#2E3842 !important; opacity:1 !important; font-weight:600; }
+html[data-color="white"] .cdots, html[data-color="sky"] .cdots{ color:#1F2730 !important; opacity:1 !important; }
+html[data-color="sky"] body.chat .msg .meta{ color:#2E3A46 !important; }
+
+/* ── 바로너 (2026-11-03) — 보라 · 민트. 바로너의 기본 색 ─────────────── */
+html[data-color="baronu"][data-mode="light"]{
+  --ink:#F6F4FF; --raise:#FFFFFF; --raise2:#EEEAFE; --line:#DCD5FA;
+  --text:#17132B; --dim:#4F4870; --faint:#7A7399;
+  --steel:#4A2BE0; --paper:#4A2BE0; --paper-ink:#FFFFFF; --bad:#C2255C;
+}
+html[data-color="baronu"][data-mode="dark"]{
+  --ink:#0F0C1D; --raise:#1A1630; --raise2:#231E3F; --line:#2E2754;
+  --text:#F1EEFF; --dim:#ABA4CC; --faint:#7E77A3;
+  --steel:#9B85FF; --paper:#7A5CFF; --paper-ink:#FFFFFF; --bad:#FF7AA2;
+}
+.sw-baronu .dot{ background:linear-gradient(135deg,#4A2BE0,#12C79A); }

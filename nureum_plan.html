@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#E4572E">
+<title>이용 현황 · 바로너</title>
+<link rel="stylesheet" href="nureum.css?v=20261101a">
+<script src="alias_config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="alias_common.js?v=20261101b"></script>
+<script src="nureum.js?v=20261101c"></script>
+<style>
+.use{border-radius:22px;background:#1B1B1F;color:#fff;padding:18px;display:flex;flex-direction:column;gap:12px}
+.use .r{display:flex;justify-content:space-between;font-size:14px}
+.x3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.x3 button{border:2px solid var(--nu-line);border-radius:16px;background:var(--nu-bg);color:var(--nu-ink);padding:10px 4px;font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.x3 b{font-size:14px}.x3 span{font-size:13px;color:var(--nu-main);font-weight:700}
+.x3 button[aria-pressed="true"]{border-color:var(--nu-main);background:rgba(228,87,46,.08)}
+.pass{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pass>div.on{border-color:var(--nu-main);background:rgba(228,87,46,.06)}
+.pass>div{cursor:pointer;border:2px solid var(--nu-line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:8px;position:relative}
+.pass .p{font-size:19px;font-weight:900;color:var(--nu-main)}
+.step{display:flex;align-items:center;justify-content:space-between;background:var(--nu-soft);border-radius:12px;padding:4px}
+.step button{width:36px;height:36px;border:none;border-radius:10px;background:var(--nu-bg);color:var(--nu-ink);font-size:20px;font-weight:900;cursor:pointer}
+.badge{position:absolute;top:-11px;right:10px;background:var(--nu-main);color:#fff;font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 8px}
+h3{margin:4px 0 0;font-size:15px;font-weight:900}
+</style>
+</head>
+<body>
+<!-- 핫라인 이용 현황 · 연장 · 용량 추가 · 당겨 쓰기
+     요금: 핫라인 1개 · 1개월권 1,650원 · 12개월권 16,500원(부가세 포함), 여러 장 구입 가능.
+     앱에서는 구글 · 애플 결제, 웹은 "앱에서 결제" 안내(웹 결제는 다음 단계). -->
+<div class="nu">
+  <div class="nu-top">
+    <a class="nu-back" id="back" href="index.html" aria-label="뒤로">‹</a>
+    <h1 id="ttl">이용 현황</h1>
+  </div>
+  <div id="err" class="nu-err" role="alert"></div>
+  <div id="ok" class="nu-ok" role="status"></div>
+
+  <div class="use">
+    <div class="r" style="align-items:baseline"><b style="font-size:18px">이번 달 기본 용량</b><span id="until" style="font-size:13px;opacity:.85"></span></div>
+    <div><div class="r"><span>음성통화</span><b id="vTxt"></b></div><div class="nu-bar" style="margin-top:6px"><i id="vBar" style="background:#6FD39B"></i></div></div>
+    <div><div class="r"><span>영상통화</span><b id="dTxt"></b></div><div class="nu-bar" style="margin-top:6px"><i id="dBar" style="background:#FFB84D"></i></div><span id="dWarn" style="font-size:12px;color:#FFD39A"></span></div>
+    <div class="r"><span>사진 · 동영상 · 파일 보관</span><b id="sTxt"></b></div>
+  </div>
+
+  <div id="ownerPart" class="nu-hidden" style="display:flex;flex-direction:column;gap:12px">
+    <h3>모자라면 ① 추가 구입 (이번 달만)</h3>
+    <div class="x3" id="extras"></div>
+    <button class="nu-card" id="borrow" type="button" style="text-align:left;background:var(--nu-bg);color:var(--nu-ink);font:inherit;cursor:pointer">
+      <b style="font-size:15px">모자라면 ② 다음 달 것 당겨 쓰기</b>
+      <span class="nu-sub" style="margin:0" id="borrowSub">남은 기간이 한 달 줄어들고, 이번 달 용량이 한 달치 늘어요</span>
+    </button>
+
+    <h3>기간 늘리기 · 핫라인 1개 기준</h3>
+    <div class="pass">
+      <div id="c1"><b>1개월권</b><span class="p" id="p1"></span><div class="step"><button type="button" data-k="m1" data-d="-1" aria-label="1개월권 빼기">−</button><b id="q1">0장</b><button type="button" data-k="m1" data-d="1" aria-label="1개월권 더하기">+</button></div></div>
+      <div id="c12"><span class="badge">2달 덤</span><b>12개월권</b><span class="p" id="p12"></span><div class="step"><button type="button" data-k="m12" data-d="-1" aria-label="12개월권 빼기">−</button><b id="q12">1장</b><button type="button" data-k="m12" data-d="1" aria-label="12개월권 더하기">+</button></div></div>
+    </div>
+    <span class="nu-sub" style="margin:0" id="sum"></span>
+    <button class="nu-btn" id="pay" type="button">결제하기</button>
+  </div>
+
+  <div class="nu-note" id="note" style="margin-top:auto;margin-bottom:40px">요금은 <b>핫라인을 만든 사람</b>이 냅니다(부가세 포함). 핫라인마다 따로 계산하고, 짝 맺은 상대는 내지 않아요.</div>
+</div>
+
+<script>
+var lineId = NU.q('line'), L = null, q = { m1: 0, m12: 1 }, pick = null, admin = false;
+
+function pct(a, b){ return Math.max(0, Math.min(100, b ? Math.round(a * 100 / b) : 0)) + '%'; }
+function paintSum(){
+  var P = L.prices, months = q.m1 + q.m12 * 12, total = q.m1 * P.m1 + q.m12 * P.m12;
+  document.getElementById('q1').textContent = q.m1 + '장';
+  document.getElementById('q12').textContent = q.m12 + '장';
+  /* 🔴 고른 이용권만 테두리를 칠합니다(전에는 12개월권이 늘 골라진 것처럼 보였음) */
+  document.getElementById('c1').classList.toggle('on', q.m1 > 0);
+  document.getElementById('c12').classList.toggle('on', q.m12 > 0);
+  var base = L.active ? new Date(L.plan_until) : new Date();
+  var to = new Date(base); to.setMonth(to.getMonth() + months);
+  document.getElementById('sum').textContent = months
+    ? '합계 ' + NU.won(total) + ' · ' + months + '개월 → ' + NU.fmtDate(to.toISOString()) + '까지'
+    : '1개월권 · 12개월권을 골라 주세요';
+  document.getElementById('pay').disabled = !months && !pick;
+  document.getElementById('pay').textContent = pick ? NU.won(P.extra) + ' 결제하기' : (months ? NU.won(total) + ' 결제하기' : '결제하기');
+}
+
+async function load(){
+  var d = await NU.rpc('nureum_line', { p_line: lineId });
+  if (!d.ok) { NU.showErr('err', NU.errText(d.error)); return; }
+  L = d;
+  document.getElementById('ttl').textContent = L.name + ' 핫라인 · 이용 현황';
+  document.getElementById('back').href = 'nureum_line.html?line=' + L.id;
+  var u = L.usage;
+  document.getElementById('until').textContent = L.active ? NU.fmtDate(L.plan_until) + '까지' : '이용권 없음';
+  document.getElementById('vTxt').textContent = u.voice_used_min + ' / ' + u.voice_max_min + '분';
+  document.getElementById('dTxt').textContent = u.video_used_min + ' / ' + u.video_max_min + '분';
+  document.getElementById('vBar').style.width = pct(u.voice_used_min, u.voice_max_min);
+  document.getElementById('dBar').style.width = pct(u.video_used_min, u.video_max_min);
+  var left = u.video_max_min - u.video_used_min;
+  document.getElementById('dWarn').textContent = left <= u.video_max_min * 0.2 ? (left > 0 ? '거의 다 썼어요 · 남은 ' + left + '분' : '다 썼어요') : '';
+  document.getElementById('sTxt').textContent = (u.storage_max_mb >= 1024 ? (u.storage_max_mb / 1024).toFixed(u.storage_max_mb % 1024 ? 1 : 0) + 'GB' : u.storage_max_mb + 'MB') + '까지';
+  if (!L.is_owner) {
+    document.getElementById('note').innerHTML = '이 핫라인은 <b>만든 분</b>이 이용권을 냅니다. 기간 연장 · 용량 추가는 만든 분이 할 수 있어요.';
+    return;
+  }
+  var P = L.prices;
+  document.getElementById('ownerPart').classList.remove('nu-hidden');
+  document.getElementById('p1').textContent = NU.won(P.m1);
+  document.getElementById('p12').textContent = NU.won(P.m12);
+  var ex = [['voice', '음성 +' + P.extra_voice_min + '분'], ['video', '영상 +' + P.extra_video_min + '분'], ['storage', '저장 +' + Math.round(P.extra_storage_mb / 1024) + 'GB']];
+  var box = document.getElementById('extras');
+  box.innerHTML = ex.map(function(e){ return '<button type="button" data-x="' + e[0] + '" aria-pressed="false"><b>' + e[1] + '</b><span>' + NU.won(P.extra) + '</span></button>'; }).join('');
+  box.querySelectorAll('button').forEach(function(b){
+    b.onclick = function(){
+      var on = b.getAttribute('aria-pressed') !== 'true';
+      box.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-pressed', 'false'); });
+      b.setAttribute('aria-pressed', String(on)); pick = on ? b.dataset.x : null;
+      if (pick) { q.m1 = 0; q.m12 = 0; }
+      paintSum();
+    };
+  });
+  var canBorrow = L.active && (new Date(L.plan_until).getTime() - Date.now() > 31 * 86400000);
+  var bb = document.getElementById('borrow'); bb.disabled = !canBorrow; bb.style.opacity = canBorrow ? '' : '.5';
+  if (!canBorrow) document.getElementById('borrowSub').textContent = '남은 기간이 한 달보다 길 때 쓸 수 있어요';
+  if (!L.active) { q.m12 = 0; q.m1 = 1; }
+  paintSum();
+}
+
+[['c1', 'm1'], ['c12', 'm12']].forEach(function(x){
+  document.getElementById(x[0]).addEventListener('click', function(e){
+    if (e.target.closest('.step')) return;
+    q = { m1: 0, m12: 0 }; q[x[1]] = 1;
+    pick = null; document.querySelectorAll('#extras button').forEach(function(b){ b.setAttribute('aria-pressed', 'false'); });
+    paintSum();
+  });
+});
+document.querySelectorAll('.step button').forEach(function(b){
+  b.onclick = function(){
+    var k = b.dataset.k; q[k] = Math.max(0, Math.min(99, q[k] + Number(b.dataset.d)));
+    if (q.m1 + q.m12 > 0 && pick) { pick = null; document.querySelectorAll('#extras button').forEach(function(x){ x.setAttribute('aria-pressed', 'false'); }); }
+    paintSum();
+  };
+});
+document.getElementById('borrow').onclick = async function(){
+  if (!confirm('다음 달 것을 당겨 쓸까요?\n이번 달 용량이 한 달치 늘고, 남은 기간이 한 달 줄어듭니다.')) return;
+  try {
+    var r = await NU.rpc('nureum_borrow', { p_line: L.id });
+    if (!r.ok) { NU.showErr('err', NU.errText(r.error)); return; }
+    document.getElementById('ok').textContent = '당겨 썼어요. 이번 달 용량이 늘었습니다.'; document.getElementById('ok').classList.add('on');
+    await load();
+  } catch (e) { NU.showErr('err', e.message || String(e)); }
+};
+/* 🔴 2026-10-30 — 앱 결제(구글 · 애플). 상품 번호는 서버(alias-plan-google-verify) · 스토어와 같아야 합니다.
+   ⚠ 한 번에 한 종류만 삽니다. 여러 장은 구글 결제창에서 수량으로 고릅니다(아이폰은 한 번에 1장).
+   ⚠ 결제 직전에 "어느 핫라인인지" 서버에 적어 둡니다(nureum_buy_intent) — 영수증이 늦게 와도 그 핫라인에 들어가게. */
+var SKU = { m1: 'nureum_line_1m', m12: 'nureum_line_12m', voice: 'nureum_voice_300', video: 'nureum_video_100', storage: 'nureum_storage_1gb' };
+var STORE = !!(window.AliasNative && typeof AliasNative.storeBuy === 'function');
+var buying = false;
+function payDone(r){
+  buying = false; document.getElementById('pay').disabled = false;
+  NU.closeSheet();
+  if (r && r.ok) {
+    var ok = document.getElementById('ok');
+    ok.textContent = r.already ? '이미 넣어 드린 결제입니다.' : '결제가 끝났어요. 이용권을 넣어 드렸습니다.'; ok.classList.add('on');
+    load().catch(function(){});
+    return;
+  }
+  if (r && (r.canceled || r.cleared)) { NU.showErr('err', r.cleared ? '취소 · 환불된 결제를 정리했습니다.' : ''); return; }
+  if (r && r.pending) { NU.showErr('err', '결제가 아직 확정되지 않았습니다. 확정되면 저절로 들어갑니다.'); return; }
+  if (r && r.owned) { NU.showErr('err', '전에 산 것을 정리하는 중입니다. 잠시 뒤 다시 눌러 주세요.'); return; }
+  if (r && /상품을 찾지 못했습니다/.test(r.error || '') && /iPhone|iPad/.test(navigator.userAgent)) {
+    NU.showErr('err', '아이폰 결제는 곧 열립니다(애플 확인 중). 조금만 기다려 주세요.'); return;
+  }
+  NU.showErr('err', '결제를 마치지 못했습니다.' + (r && r.error ? '\n(' + r.error + ')' : ''));
+}
+document.getElementById('pay').onclick = async function(){
+  NU.showErr('err', '');
+  var which = pick || (q.m12 > 0 ? 'm12' : (q.m1 > 0 ? 'm1' : null));
+  if (!which) { NU.showErr('err', '1개월권이나 12개월권을 골라 주세요.'); return; }
+  if (!pick && q.m1 > 0 && q.m12 > 0) { NU.showErr('err', '한 번에 한 종류만 살 수 있어요. 1개월권이나 12개월권 중 하나만 골라 주세요.'); return; }
+  /* 🔴 2026-11-01 — 가입 없이 쓰는 계정은 결제 전에 꼭 계정을 지키게 합니다(휴대폰을 바꿔도 이용권이 남게) */
+  if (NU.isAnon(await NU.session())) {
+    var ok = await NU.protect('이용권은 계정에 담겨요. 휴대폰을 바꾸거나 앱을 지워도 이용권이 남도록, 결제 전에 아이디 · 비밀번호를 만들어 주세요(30초).');
+    if (!ok) return;
+    NU.closeSheet();
+  }
+  if (!STORE) { webPay(which); return; }
+  if (buying) return;
+  buying = true; this.disabled = true;
+  try {
+    var r = await NU.rpc('nureum_buy_intent', { p_line: L.id, p_sku: SKU[which] });
+    if (!r.ok) throw new Error(NU.errText(r.error));
+    AL.onStoreDone = payDone;
+    AliasNative.storeBuy(SKU[which]);    // 결과는 AL.onStoreEvent → AL.onStoreDone 으로 옵니다
+    NU.sheet('<h2>결제창을 여는 중…</h2><p class="nu-sub">결제를 마치면 이 화면이 저절로 바뀝니다.</p>');
+    setTimeout(function(){ if (buying) { NU.closeSheet(); buying = false; document.getElementById('pay').disabled = false; } }, 90000);
+  } catch (e) {
+    buying = false; this.disabled = false;
+    NU.showErr('err', e.message || String(e));
+  }
+};
+/* =====================================================================
+   🔴 2026-10-31 — 웹(브라우저) 결제: 카드(이니시스) · PayPal
+   서버 함수 nureum-web-pay 가 값을 직접 계산하고, 결제가 확인되면 핫라인에 넣습니다.
+   ===================================================================== */
+var WEB_NAMES = { m1: '1개월권', m12: '12개월권', voice: '음성 +300분', video: '영상 +100분', storage: '저장 +1GB' };
+var KIND = { m1: '1m', m12: '12m', voice: 'voice', video: 'video', storage: 'storage' };
+var _ini = null;
+function loadIni(){
+  if (window.INIPayPro) return Promise.resolve();
+  if (_ini) return _ini;
+  _ini = new Promise(function(res, rej){
+    var s = document.createElement('script'); s.src = 'https://paypro.inicis.com/std/payment/js/INIPayPro_v2.js';
+    s.charset = 'UTF-8'; s.onload = res; s.onerror = function(){ _ini = null; rej(new Error('카드 결제창을 불러오지 못했습니다')); };
+    document.head.appendChild(s);
+  });
+  return _ini;
+}
+function webPay(which){
+  var qty = pick ? 1 : (q[which] || 1);
+  var P = L.prices, unit = which === 'm1' ? P.m1 : which === 'm12' ? P.m12 : P.extra;
+  var sh = NU.sheet('<h2>' + WEB_NAMES[which] + (qty > 1 ? ' ' + qty + '장' : '') + ' · ' + NU.won(unit * qty) + '</h2>' +
+    '<span class="nu-lbl">카드 결제</span>' +
+    '<input class="nu-in" id="wpName" placeholder="구매자 이름" autocomplete="name" style="margin-bottom:8px">' +
+    '<input class="nu-in" id="wpTel" placeholder="휴대폰 번호 (선택)" inputmode="tel" autocomplete="tel" style="margin-bottom:10px">' +
+    '<button class="nu-btn" id="wpCard" type="button">카드로 결제</button>' +
+    '<span class="nu-lbl" style="margin-top:16px">해외 카드 · PayPal</span><div id="wpPP" style="min-height:48px"></div>' +
+    '<div id="wpErr" class="nu-err" style="margin-top:10px"></div>' +
+    '<button class="nu-btn ghost" data-close style="margin-top:10px">닫기</button>');
+  function err(m){ NU.showErr('wpErr', m); }
+  loadIni().catch(function(){});
+  sh.querySelector('#wpCard').onclick = async function(){
+    err('');
+    var name = sh.querySelector('#wpName').value.trim();
+    if (!name) { err('구매자 이름을 적어 주세요.'); return; }
+    this.disabled = true;
+    try {
+      var out = await AL.callFn('nureum-web-pay', { action: 'inicis_prepare', site: 'baronu', lineId: L.id, kind: KIND[which], qty: qty,
+        buyername: name, buyertel: sh.querySelector('#wpTel').value.trim() });
+      if (!out || !out.ok) throw new Error((out && out.error) || '결제를 준비하지 못했습니다');
+      await loadIni();
+      var dev = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ? 'MOBILE' : 'WEB';
+      window.INIPayPro.requestPayment({
+        P_MID: out.mid, P_OID: out.oid, P_PAY_TYPE: 'CARD', P_DEVICE_TYPE: dev, P_IDCCODE: 'Y',
+        P_AMT: out.amt, P_GOODS: out.goodname, P_UNAME: out.buyername, P_MOBILE: out.buyertel || '', P_EMAIL: '',
+        P_NEXT_URL: out.nextUrl, P_NOTI_URL: out.notiUrl, P_CLOSE_URL: out.closeUrl, P_CHARSET: 'UTF-8',
+        P_TIMESTAMP: out.timestamp, P_CHKFAKE: out.chkfake,
+      });
+    } catch (e) { err(e.message || String(e)); this.disabled = false; }
+  };
+  /* PayPal 단추 */
+  (async function(){
+    try {
+      if (!window.paypal) {
+        var c = await AL.callFn('alias-paypal-client-id', {});
+        if (!c || !c.clientId) throw new Error('PayPal 준비 안 됨');
+        await new Promise(function(res, rej){
+          var s = document.createElement('script');
+          s.src = 'https://www.paypal.com/sdk/js?client-id=' + encodeURIComponent(c.clientId) + '&currency=USD';
+          s.onload = res; s.onerror = rej; document.head.appendChild(s);
+        });
+      }
+      window.paypal.Buttons({
+        createOrder: async function(){
+          err('');
+          var o; try { o = await AL.callFn('nureum-web-pay', { action: 'paypal_create', lineId: L.id, kind: KIND[which], qty: qty }); }
+          catch (e) { err(e.message || String(e)); throw e; }
+          if (!o || !o.ok || !o.id) { err((o && o.error) || 'PayPal 주문을 만들지 못했습니다'); throw new Error('create'); }
+          return o.id;
+        },
+        onApprove: async function(data){
+          var r; try { r = await AL.callFn('nureum-web-pay', { action: 'paypal_capture', orderID: data.orderID }); }
+          catch (e) { err(e.message || String(e)); return; }
+          if (r && r.ok) { NU.closeSheet(); payDone({ ok: true, already: r.already }); }
+          else err((r && r.error) || '결제를 마치지 못했습니다');
+        },
+        onError: function(){ err('PayPal 결제 중 문제가 생겼습니다.'); },
+      }).render(sh.querySelector('#wpPP'));
+    } catch (e) {
+      sh.querySelector('#wpPP').innerHTML = '<span class="nu-sub">PayPal 을 불러오지 못했습니다.</span>';
+    }
+  })();
+}
+
+/* 이니시스에서 돌아왔을 때 (?pay=ok / fail) */
+(function(){
+  var pay = NU.q('pay');
+  if (!pay) return;
+  setTimeout(function(){
+    if (pay === 'ok') { var ok = document.getElementById('ok'); ok.textContent = '결제가 끝났어요. 이용권을 넣어 드렸습니다.'; ok.classList.add('on'); }
+    else NU.showErr('err', '결제를 마치지 못했습니다.' + (NU.q('msg') ? '\n(' + NU.q('msg') + ')' : ''));
+    try { history.replaceState(null, '', 'nureum_plan.html?line=' + lineId); } catch (e) {}
+  }, 300);
+})();
+
+/* 앱에서는 장수 고르기를 숨깁니다(수량은 결제창에서). 한 번에 한 종류만. */
+if (STORE) {
+  document.querySelectorAll('.step').forEach(function(x){ x.style.display = 'none'; });
+  q = { m1: 0, m12: 1 };
+  var hint = document.createElement('span'); hint.className = 'nu-sub'; hint.style.margin = '0';
+  hint.textContent = /iPhone|iPad/.test(navigator.userAgent) ? '한 번에 1장씩 살 수 있어요. 더 사면 기간이 이어 붙어요.' : '여러 장은 결제창에서 수량을 고르세요. 산 만큼 기간이 이어 붙어요.';
+  document.querySelector('.pass').after(hint);
+}
+
+(async function(){
+  if (!lineId) { location.replace('index.html'); return; }
+  if (!await NU.boot()) return;
+  try {
+    await load();
+  } catch (e) { console.error(e); NU.showErr('err', e.message || String(e)); }
+})();
+</script>
+</body>
+</html>
