@@ -80,6 +80,19 @@ document.addEventListener('click', function(){ try { sessionStorage.setItem('bur
     var lines = await NU.rpc('nureum_my_lines');
     NU.syncWidget(lines);   // 🔴 아이폰 위젯 목록 새로(끊긴 핫라인 빼기)
     if (!lines.length) { document.getElementById('empty').classList.remove('nu-hidden'); return; }
+    /* 🔴 2026-11-03 — 앱 아이콘을 누르면 목록 대신 바로 "그 사람 전화 화면".
+       [앱을 열면 이 사람부터]로 고른 사람, 없으면 짝 맺은 핫라인이 하나뿐일 때 그 사람. 앱을 켤 때 한 번만. */
+    try {
+      var app = (window.Capacitor && Capacitor.isNativePlatform && Capacitor.isNativePlatform()) || !!window.AliasNative ||
+                window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+      var first = !sessionStorage.getItem('bn_launched'); sessionStorage.setItem('bn_launched', '1');
+      if (app && first && !NU.q('list')) {
+        var paired = lines.filter(function(l){ return l.link_id; });
+        var homeId = localStorage.getItem('baronu_home_line');
+        var t = paired.filter(function(l){ return l.id === homeId; })[0] || (paired.length === 1 ? paired[0] : null);
+        if (t) { location.replace('nureum_line.html?line=' + t.id); return; }
+      }
+    } catch (e) {}
     grid.innerHTML = lines.map(function(l){
       var state = !l.link_id ? '짝 기다리는 중' : (!l.active ? (l.is_owner ? '이용권 필요' : '연장 필요') : '');
       var href = !l.link_id ? 'nureum_new.html?line=' + l.id : 'nureum_line.html?line=' + l.id;

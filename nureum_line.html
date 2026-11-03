@@ -27,7 +27,7 @@
      모든 핫라인이 같은 모양: 큰 [전화하기] · 한 줄 세 칸 · 긴 [전체 메뉴]. -->
 <div class="nu" id="wrap" style="gap:14px">
   <div style="display:flex;align-items:center;gap:14px">
-    <a href="index.html" class="nu-ico" id="ico" style="width:72px;height:72px;border-radius:50%;font-size:32px;text-decoration:none;background:#999" aria-label="바로너 처음 화면">·</a>
+    <a href="index.html?list=1" class="nu-ico" id="ico" style="width:72px;height:72px;border-radius:50%;font-size:32px;text-decoration:none;background:#999" aria-label="바로너 처음 화면">·</a>
     <div style="display:flex;flex-direction:column;gap:2px;min-width:0;flex:1">
       <b id="name" style="font-size:30px;font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">…</b>
       <span id="state" style="font-size:16px;font-weight:700;color:#0E9C77"></span>
@@ -97,6 +97,12 @@ function menu(){
     NU.canPin() ? ['📌', '바탕화면에 놓기', function(){ NU.pin(L); }] : null,
     ['🖨', 'QR 카드 만들기 (냉장고 · 지갑)', function(){ location.href = 'nureum_card.html?line=' + L.id; }],
     ['⚙️', '이 핫라인 설정', settings],
+    [localStorage.getItem('baronu_home_line') === L.id ? '⭐' : '☆', localStorage.getItem('baronu_home_line') === L.id ? '앱을 열면 이 사람부터 ✓' : '앱을 열면 이 사람부터', function(){
+      var on = localStorage.getItem('baronu_home_line') === L.id;
+      try { on ? localStorage.removeItem('baronu_home_line') : localStorage.setItem('baronu_home_line', L.id); } catch (e) {}
+      NU.closeSheet();
+      NU.sheet('<h2>' + (on ? '해제했어요' : '정했어요') + '</h2><p class="nu-sub" style="color:var(--nu-ink)">' + (on ? '앱을 열면 핫라인 목록이 나와요.' : '이제 바로너 앱을 열면 <b>' + NU.esc(L.name) + '</b> 전화 화면이 바로 나와요.') + '</p><button class="nu-btn" data-close>확인</button>');
+    }],
     ['💞', '우리 둘 앨범', function(){ location.href = 'nureum_album.html?line=' + encodeURIComponent(L.id); }],
     ['🏠', '바로너 처음 화면', function(){ location.href = 'index.html'; }],
   ].filter(Boolean);
