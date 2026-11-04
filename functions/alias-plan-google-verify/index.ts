@@ -87,7 +87,7 @@ const NUMBER_SKUS: Record<string, { kind: string; krw: number }> = {
 /* 🔴 2026-10-30 — 누름 상품. 화면(nureum_plan.html) · Play Console · App Store Connect 와 **같아야** 합니다.
    모두 소모성 상품(여러 번 살 수 있음, 구글은 "수량 여러 개" 켜기). 값은 원(KRW, 부가세 포함). */
 const NUREUM_SKUS: Record<string, { kind: string; krw: number }> = {
-  nureum_line_1m:     { kind: '1m',      krw: 1650 },
+  nureum_line_1m:     { kind: '1m',      krw: 1700 },   // 🔴 2026-11-05 1,700원
   nureum_line_12m:    { kind: '12m',     krw: 16500 },
   nureum_voice_300:   { kind: 'voice',   krw: 1100 },
   nureum_video_100:   { kind: 'video',   krw: 1100 },
