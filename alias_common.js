@@ -2261,6 +2261,8 @@ AL.showDeletionBar = async function(where){
 };
 
 AL.showPlanBar = async function(where){
+  /* 🔴 2026-11-05 바로너 — 핫라인마다 이용권이 따로 있어 부름의 "무료 체험 · 구매" 띠는 보이지 않게 */
+  return;
   var p = await AL.myPlan();
 
   /* 🔴🔴 2026-09-20 — 이용권이 살아 있어도 **늘 보여줍니다.**
@@ -5282,4 +5284,21 @@ AL.EN_PATCH = {
     var s = document.createElement('script'); s.src = 'burum_partner_ref.js?v=20261029'; s.defer = true;
     (document.head || document.documentElement).appendChild(s);
   } catch (e) {}
+})();
+
+/* 🔴 2026-11-05 바로너 — 서버가 핫라인 이름 대신 '누름'을 붙여 보내는 곳(통화 화면 제목 등)을 '바로너'로 */
+(function(){
+  function fix(n){
+    if (n.nodeType === 3) { if (/^\s*누름\s*$/.test(n.nodeValue)) n.nodeValue = n.nodeValue.replace('누름', '바로너'); return; }
+    if (n.nodeType !== 1 || /^(SCRIPT|STYLE|TEXTAREA|INPUT)$/.test(n.nodeName)) return;
+    for (var c = n.firstChild; c; c = c.nextSibling) fix(c);
+  }
+  function go(){
+    if (!document.body) return;
+    fix(document.body);
+    new MutationObserver(function(ms){ ms.forEach(function(m){ if (m.type === 'characterData') fix(m.target); else m.addedNodes.forEach(fix); }); })
+      .observe(document.body, { childList: true, subtree: true, characterData: true });
+    if (/누름/.test(document.title)) document.title = document.title.replace(/누름/g, '바로너');
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();
