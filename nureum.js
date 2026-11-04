@@ -482,7 +482,17 @@ NU.meSheet = async function(){
       : '<p class="nu-sub" style="margin:0 0 10px">로그인: <b>' + NU.esc(nick || '계정') + '</b></p>') +
     '<a class="nu-btn ghost" href="terms.html" style="margin-top:8px">이용약관 · 개인정보 · 환불</a>' +
     '<button class="nu-btn ghost" id="mOut" type="button" style="margin-top:8px">로그아웃</button>' +
-    '<button class="nu-btn ghost" data-close type="button" style="margin-top:8px">닫기</button>');
+    '<button class="nu-btn ghost" data-close type="button" style="margin-top:8px">닫기</button>' +
+    '<button id="mDel" type="button" style="margin-top:14px;background:none;border:none;color:var(--nu-sub);font:inherit;font-size:13.5px;text-decoration:underline;cursor:pointer;padding:8px">회원 탈퇴 (계정 지우기)</button>');
+  /* 🔴 2026-11-05 — 회원 탈퇴(스토어 필수). 부름과 같은 기능: 신청 7일 뒤 계정 · 핫라인 · 사진이 지워집니다. */
+  sh.querySelector('#mDel').onclick = async function(){
+    if (!confirm('계정을 지울까요?\n7일 뒤 계정 · 핫라인 · 대화 · 사진이 모두 지워지고 되돌릴 수 없어요. 남은 이용권은 환불되지 않습니다.\n(7일 안에 취소하려면 weapps.kr@gmail.com 으로 알려 주세요)')) return;
+    this.disabled = true;
+    try {
+      var r = await AL.sb.rpc('request_account_deletion'); if (r.error) throw r.error;
+      await AL.sb.auth.signOut(); alert('탈퇴 신청을 받았어요. 7일 뒤 지워집니다.'); location.href = 'index.html';
+    } catch (e) { alert('탈퇴하지 못했어요: ' + (e.message || e)); this.disabled = false; }
+  };
   var bp = sh.querySelector('#mProtect');
   if (bp) bp.onclick = function(){ NU.protect(); };
   sh.querySelector('#mOut').onclick = async function(){
