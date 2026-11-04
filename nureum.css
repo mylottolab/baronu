@@ -6,9 +6,11 @@
   --nu-shadow:0 6px 22px rgba(74,43,224,.10);
 }
 @media (prefers-color-scheme: dark){
-  :root{ --nu-bg:#0F0C1D; --nu-card:#1A1630; --nu-ink:#F1EEFF; --nu-sub:#ABA4CC; --nu-line:#2C2650; --nu-soft:#231E3F; --nu-note:#12261F; --nu-warn:#FF7AA2;
+  :root:not([data-theme="light"]){ --nu-bg:#0F0C1D; --nu-card:#1A1630; --nu-ink:#F1EEFF; --nu-sub:#ABA4CC; --nu-line:#2C2650; --nu-soft:#231E3F; --nu-note:#12261F; --nu-warn:#FF7AA2;
          --nu-shadow:0 4px 16px rgba(0,0,0,.4); }
 }
+:root[data-theme="dark"]{ --nu-bg:#0F0C1D; --nu-card:#1A1630; --nu-ink:#F1EEFF; --nu-sub:#ABA4CC; --nu-line:#2C2650; --nu-soft:#231E3F; --nu-note:#12261F; --nu-warn:#FF7AA2;
+         --nu-shadow:0 4px 16px rgba(0,0,0,.4); }
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--nu-bg);color:var(--nu-ink);
   font-family:"Pretendard","Noto Sans KR",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
@@ -31,6 +33,8 @@ html,body{margin:0;background:var(--nu-bg);color:var(--nu-ink);
 .nu-btn{height:56px;border:none;border-radius:999px;background:linear-gradient(135deg,var(--nu-main),var(--nu-main2));color:var(--nu-main-ink);font:inherit;font-size:17px;font-weight:900;cursor:pointer;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;box-shadow:0 6px 16px rgba(74,43,224,.25)}
 .nu-btn.ghost{background:var(--nu-card);color:var(--nu-ink);box-shadow:none;border:1.5px solid var(--nu-line)}
 .nu-btn.line{background:transparent;color:var(--nu-main);border:2px solid var(--nu-main);box-shadow:none}
+:root[data-theme="dark"] .nu-btn.line{color:#B7A6FF;border-color:#7A5CFF}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .nu-btn.line{color:#B7A6FF;border-color:#7A5CFF} }
 .nu-btn.mint{background:var(--nu-mint);box-shadow:0 6px 16px rgba(18,199,154,.3)}
 .nu-btn:disabled{opacity:.5;cursor:default}
 
