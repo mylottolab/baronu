@@ -111,6 +111,7 @@ Deno.serve(async (req) => {
       const why = await checkLine(userId, body.lineId);
       if (why) return bad(why, 403);
       const p = await price(kind, qty);
+      if (body.site === 'baronu' && kind === '1m') p.krw = 1700 * qty;   // 🔴 2026-11-05 바로너 1개월권 1,700원(애플 가격 단계에 맞춤)
       const goods = NAMES[kind] + (qty > 1 ? ' ×' + qty : '');
 
       if (action === 'inicis_prepare') {

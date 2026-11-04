@@ -93,7 +93,7 @@ const NUREUM_SKUS: Record<string, { kind: string; krw: number }> = {
   nureum_video_100:   { kind: 'video',   krw: 1100 },
   nureum_storage_1gb: { kind: 'storage', krw: 1100 },
   /* 🔴 2026-11-03 — 바로너 앱 상품(같은 누름 라인에 넣습니다. 애플은 상품 번호를 앱마다 따로 써야 해서 이름만 다름) */
-  baronu_line_1m:     { kind: '1m',      krw: 1650 },
+  baronu_line_1m:     { kind: '1m',      krw: 1700 },   // 🔴 2026-11-05 바로너는 1,700원
   baronu_line_12m:    { kind: '12m',     krw: 16500 },
   baronu_voice_300:   { kind: 'voice',   krw: 1100 },
   baronu_video_100:   { kind: 'video',   krw: 1100 },

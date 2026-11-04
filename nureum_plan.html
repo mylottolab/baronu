@@ -30,7 +30,7 @@ h3{margin:4px 0 0;font-size:15px;font-weight:900}
 </head>
 <body>
 <!-- 핫라인 이용 현황 · 연장 · 용량 추가 · 당겨 쓰기
-     요금: 핫라인 1개 · 1개월권 1,650원 · 12개월권 16,500원(부가세 포함), 여러 장 구입 가능.
+     요금: 핫라인 1개 · 1개월권 1,700원 · 12개월권 16,500원(부가세 포함), 여러 장 구입 가능.
      앱에서는 구글 · 애플 결제, 웹은 "앱에서 결제" 안내(웹 결제는 다음 단계). -->
 <div class="nu">
   <div class="nu-top">
@@ -93,6 +93,7 @@ async function load(){
   var d = await NU.rpc('nureum_line', { p_line: lineId });
   if (!d.ok) { NU.showErr('err', NU.errText(d.error)); return; }
   L = d;
+  if (L && L.prices) L.prices.m1 = 1700;   // 🔴 2026-11-05 바로너 1개월권은 1,700원(애플 가격 단계에 1,650원이 없어 모든 곳을 1,700원으로)
   document.getElementById('ttl').textContent = L.name + ' 핫라인 · 이용 현황';
   document.getElementById('back').href = 'nureum_line.html?line=' + L.id;
   var u = L.usage;
