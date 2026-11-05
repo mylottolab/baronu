@@ -10,7 +10,7 @@
 <body>
 <!-- 🔴 2026-11-01 — QR 카드를 휴대폰 카메라로 찍었을 때 오는 곳 (로그인 필요 없음)
      · 바로너 앱 안(QR 카드 찍기)에서 왔으면 바로 핫라인 화면으로
-     · 아이폰 카메라: burumnureum://line/<번호> 로 바로너 앱을 엽니다(아이폰 1.7 이상)
+     · 아이폰 카메라: 이 화면에서 바로 핫라인을 엽니다
      · 안드로이드 카메라: 바로너 앱을 열어 보고, 안 되면 이 화면에서 바로 열기 -->
 <div class="nu">
   <div class="nu-top">
@@ -36,10 +36,10 @@
   if (inApp) { location.replace(web); return; }
   var app;
   if (/iPhone|iPad|iPod/.test(ua)) {
-    app = 'burumnureum://' + (id ? 'line/' + id : 'home');
+    location.replace(web); return;   // 🔴 2026-11-05 바로너 아이폰 앱은 아직 바로 여는 주소가 없어 이 화면에서 엽니다
   } else if (/Android/.test(ua)) {
     var fb = location.href.replace(/[^/]*$/, '') + web;
-    app = 'intent://' + (id ? 'line/' + id : 'home') + '#Intent;scheme=burumnureum;package=com.weaveapp.alias;S.browser_fallback_url=' + encodeURIComponent(fb) + ';end';
+    app = 'intent://' + (id ? 'line/' + id : 'home') + '#Intent;scheme=baronu;package=com.weaveapp.baronu;S.browser_fallback_url=' + encodeURIComponent(fb) + ';end';
   } else {
     location.replace(web); return;
   }

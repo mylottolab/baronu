@@ -23,8 +23,8 @@
     <span class="nu-sub" style="margin:0">바로너 앱을 무료로 설치합니다.</span>
     <a class="nu-btn" id="store" href="#">앱 설치하기</a>
     <div id="both" class="nu-hidden" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <a class="nu-btn line" href="https://play.google.com/store/apps/details?id=com.weaveapp.alias">안드로이드</a>
-      <a class="nu-btn line" href="https://apps.apple.com/app/id6819847165">아이폰</a>
+      <a class="nu-btn line" href="https://play.google.com/store/apps/details?id=com.weaveapp.baronu">안드로이드</a>
+      <a class="nu-btn line" href="https://apps.apple.com/app/id6830149213">아이폰</a>
     </div>
   </div>
 
@@ -40,8 +40,8 @@
   var ua = navigator.userAgent || '';
   var ios = /iPhone|iPad|iPod/.test(ua), android = /Android/.test(ua);
   var store = document.getElementById('store');
-  if (ios) store.href = 'https://apps.apple.com/app/id6819847165';
-  else if (android) store.href = 'https://play.google.com/store/apps/details?id=com.weaveapp.alias';
+  if (ios) store.href = 'https://apps.apple.com/app/id6830149213';
+  else if (android) store.href = 'https://play.google.com/store/apps/details?id=com.weaveapp.baronu';
   else { store.style.display = 'none'; document.getElementById('both').classList.remove('nu-hidden'); }
 
   var c = (new URLSearchParams(location.search).get('c') || '').replace(/[^0-9A-Za-z]/g, '').slice(0, 64);
