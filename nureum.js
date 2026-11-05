@@ -495,10 +495,21 @@ NU.meSheet = async function(){
   };
   var bp = sh.querySelector('#mProtect');
   if (bp) bp.onclick = function(){ NU.protect(); };
-  sh.querySelector('#mOut').onclick = async function(){
-    if (anon) {
-      if (!confirm('가입 없이 쓰는 계정은 로그아웃하면 다시 들어올 수 없어요. 핫라인도 다시 맺어야 해요.\n\n그래도 로그아웃할까요? (먼저 [계정 지키기]를 권해요)')) return;
-    } else if (!confirm('로그아웃할까요?')) return;
-    await AL.sb.auth.signOut(); location.href = 'index.html';
-  };
+  sh.querySelector('#mOut').onclick = function(){ NU.logout(u); };
+};
+
+/* 🔴 2026-11-06 — 로그아웃(가입 없이 쓰는 계정은 한 번 더 묻기) · [나] 판과 [전체 메뉴] 가 같이 씁니다 */
+NU.logout = async function(u){
+  if (u === undefined) u = await NU.session();
+  if (NU.isAnon(u)) {
+    if (!confirm('가입 없이 쓰는 계정은 로그아웃하면 다시 들어올 수 없어요. 핫라인도 다시 맺어야 해요.\n\n그래도 로그아웃할까요? (먼저 [계정 지키기]를 권해요)')) return;
+  } else if (!confirm('로그아웃할까요?')) return;
+  await AL.sb.auth.signOut(); location.href = 'index.html';
+};
+/* 🔴 2026-11-06 — 지금 들어와 있는 아이디(닉네임) */
+NU.myNick = async function(){
+  var u = await NU.session();
+  if (!u) return '';
+  if (NU.isAnon(u)) return '가입 없이 쓰는 계정';
+  try { return decodeURIComponent(String(u.email || '').split('@')[0]); } catch (e) { return ''; }
 };

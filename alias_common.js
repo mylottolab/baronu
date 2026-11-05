@@ -4692,6 +4692,11 @@ AL.topBar = async function(){
           tag.style.cssText = 'align-self:center;font-size:12px;opacity:.7;margin-right:auto;max-width:40vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
           tag.textContent = (en ? 'Signed in: ' : '로그인: ') + nk;
           bar.insertBefore(tag, bar.firstChild);
+          /* 🔴 2026-11-06 바로너 — 대화 화면이면 상대 이름도 (로그인: 구름2026 · 상대: 큰아들) */
+          var lk = new URLSearchParams(location.search).get('link');
+          if (lk && AL.peerPersona) AL.peerPersona(lk).then(function(pp){
+            if (pp && pp.display_name) tag.textContent += (en ? ' · With: ' : ' · 상대: ') + pp.display_name;
+          });
         } catch (e) {}
       }
       /* 바로너: MyPage 는 바로너 것이라 넣지 않습니다 */

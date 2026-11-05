@@ -47,6 +47,7 @@
   if (!EN) return;
 
   var D = [
+    ['로그인: … · 상대: …', 'Signed in: … · With: …'], ['가입 없이 쓰는 계정', 'Account without sign-up'], [' · 상대: ', ' · With: '], ['상대: ', 'With: '], ['로그인: ', 'Signed in: '],
     ['회원 탈퇴 (계정 지우기)', 'Delete account'], ['탈퇴 신청을 받았어요. 7일 뒤 지워집니다.', 'Deletion requested. Your account will be deleted in 7 days.'], ['탈퇴하지 못했어요:', "Couldn't delete:"],
     ['계정을 지울까요?\n7일 뒤 계정 · 핫라인 · 대화 · 사진이 모두 지워지고 되돌릴 수 없어요. 남은 이용권은 환불되지 않습니다.\n(7일 안에 취소하려면 weapps.kr@gmail.com 으로 알려 주세요)',
      'Delete your account?\nIn 7 days your account, hotlines, chats and photos will be permanently deleted. Remaining plans are not refunded.\n(To cancel within 7 days, email weapps.kr@gmail.com)'],
