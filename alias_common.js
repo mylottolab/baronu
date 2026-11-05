@@ -4689,13 +4689,13 @@ AL.topBar = async function(){
         try {
           var nk = decodeURIComponent(String(sess.user.email).split('@')[0]);
           var tag = document.createElement('span');
-          tag.style.cssText = 'align-self:center;font-size:12px;opacity:.7;margin-right:auto;max-width:40vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
+          tag.style.cssText = 'align-self:center;font-size:12px;opacity:.75;margin-right:auto;flex:1 1 auto;min-width:0;line-height:1.35;white-space:normal;word-break:keep-all;overflow-wrap:anywhere';   // 🔴 2026-11-06 — 상대 이름까지 다 보이게(두 줄 허용)
           tag.textContent = (en ? 'Signed in: ' : '로그인: ') + nk;
           bar.insertBefore(tag, bar.firstChild);
           /* 🔴 2026-11-06 바로너 — 대화 화면이면 상대 이름도 (로그인: 구름2026 · 상대: 큰아들) */
           var lk = new URLSearchParams(location.search).get('link');
           if (lk && AL.peerPersona) AL.peerPersona(lk).then(function(pp){
-            if (pp && pp.display_name) tag.textContent += (en ? ' · With: ' : ' · 상대: ') + pp.display_name;
+            if (pp && pp.display_name) { tag.textContent = ''; tag.append((en ? 'Signed in: ' : '로그인: ') + nk, document.createElement('br'), (en ? 'With: ' : '상대: ') + pp.display_name); }
           });
         } catch (e) {}
       }
