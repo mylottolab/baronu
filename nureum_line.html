@@ -104,6 +104,7 @@ function menu(){
       NU.sheet('<h2>' + (on ? '해제했어요' : '정했어요') + '</h2><p class="nu-sub" style="color:var(--nu-ink)">' + (on ? '앱을 열면 핫라인 목록이 나와요.' : '이제 바로너 앱을 열면 <b>' + NU.esc(L.name) + '</b> 전화 화면이 바로 나와요.') + '</p><button class="nu-btn" data-close>확인</button>');
     }],
     ['💞', '우리 둘 앨범', function(){ location.href = 'nureum_album.html?line=' + encodeURIComponent(L.id); }],
+    ['💛', '카카오톡으로 문의', function(){ window.open('http://pf.kakao.com/_ZxexexeX/chat', '_blank'); }],
     ['🏠', '바로너 처음 화면', function(){ location.href = 'index.html'; }],
   ].filter(Boolean);
   var sh = NU.sheet('<h2>전체 메뉴</h2>' +

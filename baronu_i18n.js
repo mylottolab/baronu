@@ -98,7 +98,7 @@
     ['로그인:', 'Signed in:'], ['이용약관 · 개인정보 · 환불', 'Terms · Privacy · Refunds'], ['로그아웃할까요?', 'Log out?'],
     ['가입 없이 쓰는 계정은 로그아웃하면 다시 들어올 수 없어요. 핫라인도 다시 맺어야 해요.\n\n그래도 로그아웃할까요? (먼저 [계정 지키기]를 권해요)',
      "Accounts without sign-up can't sign back in after logging out, and hotlines must be paired again.\n\nLog out anyway? (We recommend [Protect account] first.)"],
-    ['바로너 처음 화면', 'Baronu home'], ['이용권 고르기', 'Choose a plan'],
+    ['바로너 처음 화면', 'Baronu home'], ['카카오톡으로 문의', 'Contact us on KakaoTalk'], ['이용권 고르기', 'Choose a plan'],
     ['전화하기', 'Call'], ['영상통화', 'Video'], ['사진 보내기', 'Photo'], ['대화하기', 'Chat'], ['전체 메뉴', 'All menu'],
     ['기본 용량을 다 썼어요. 문자 · 사진은 그대로 됩니다.', "monthly allowance is used up. Chat and photos still work."],
     ['용량 추가 · 당겨 쓰기', 'Add more · borrow'], ['용량을 다 썼어요. 문자 · 사진은 그대로 됩니다.', 'allowance is used up. Chat and photos still work.'],
