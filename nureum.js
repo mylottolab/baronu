@@ -480,10 +480,13 @@ NU.meSheet = async function(){
       ? '<div class="nu-note" style="margin-bottom:10px"><b>이 휴대폰에서만 쓰는 계정</b>이에요. 휴대폰을 바꾸거나 앱을 지우면 핫라인이 사라질 수 있어요.</div>' +
         '<button class="nu-btn" id="mProtect" type="button">계정 지키기 (아이디 만들기)</button>'
       : '<p class="nu-sub" style="margin:0 0 10px">로그인: <b>' + NU.esc(nick || '계정') + '</b></p>') +
+    '<div id="prBox" style="margin-top:6px"></div>' +
     '<a class="nu-btn ghost" href="terms.html" style="margin-top:8px">이용약관 · 개인정보 · 환불</a>' +
     '<button class="nu-btn ghost" id="mOut" type="button" style="margin-top:8px">로그아웃</button>' +
     '<button class="nu-btn ghost" data-close type="button" style="margin-top:8px">닫기</button>' +
     '<button id="mDel" type="button" style="margin-top:14px;background:none;border:none;color:var(--nu-sub);font:inherit;font-size:13.5px;text-decoration:underline;cursor:pointer;padding:8px">회원 탈퇴 (계정 지우기)</button>');
+  /* 🔴 2026-11-09 유치대리점: 추천 대리점 코드 넣기(가입 후 30일 안) */
+  try { var prb = sh.querySelector('#prBox'); if (prb && window.PartnerRef) PartnerRef.mount(prb); } catch (e) {}
   /* 🔴 2026-11-05 — 회원 탈퇴(스토어 필수). 부름과 같은 기능: 신청 7일 뒤 계정 · 핫라인 · 사진이 지워집니다. */
   sh.querySelector('#mDel').onclick = async function(){
     if (!confirm('계정을 지울까요?\n7일 뒤 계정 · 핫라인 · 대화 · 사진이 모두 지워지고 되돌릴 수 없어요. 남은 이용권은 환불되지 않습니다.\n(7일 안에 취소하려면 weapps.kr@gmail.com 으로 알려 주세요)')) return;
