@@ -476,6 +476,8 @@ async function handleNureum(userId: string, productId: string, purchaseToken: st
     currency_code: 'KRW',
     status: 'completed',
     purpose: 'nureum',
+    /* 🔴 2026-11-09 — 어느 앱에서 샀는지(관리자 통계 '앱별 매출'). baronu_ 로 시작하면 바로너, 아니면 누름 */
+    google_product_id: productId,
     completed_at: new Date().toISOString(),
   });
   if (payErr) console.error('[google-verify] payments 저장 실패 — 누름 이용권은 드렸습니다:', orderId, payErr.message);
