@@ -81,7 +81,7 @@
     ['바로너는 정해진 한 사람과만 쓰는 직통 연결입니다. 핫라인마다 바탕화면 아이콘이 생기고, 누르면 그 사람에게 바로 전화 · 영상 · 사진 · 문자를 보낼 수 있어요. 서로 전화번호는 보이지 않습니다.',
      'Baronu is a direct line to one chosen person. Each hotline gets a home-screen icon — tap it to call, video, send photos or chat right away. No phone numbers are shared.'],
     ['가입 없이', 'No sign-up —'], ['바로 시작할 수 있어요. 아이디는 나중에 만들어도 됩니다.', 'start right away. You can create an ID later.'],
-    ['가입 없이 바로 시작', 'Start without signing up'], ['계정이 있어요 · 로그인', 'I have an account · Sign in'],
+    ['가입 없이 바로 시작', 'Start without signing up'], ['계정이 있어요 · 로그인', 'I have an account · Sign in'], ['▶ 안드로이드 앱 받기', '▶ Get the Android app'], ['📱 아이폰 앱 받기', '📱 Get the iPhone app'],
     ['시작하지 못했어요:', "Couldn't start:"],
     ['지금은 이 휴대폰에서만 쓰는 계정이에요. 아이디 · 비밀번호를 만들어 두면 휴대폰을 바꿔도 핫라인 · 이용권이 그대로 남아요.', 'This account lives only on this phone. Create an ID and password to keep your hotlines and plans when you change phones.'],
     ['아이디 (닉네임)', 'ID (nickname)'], ['비밀번호 (8자 이상)', 'Password (8+ characters)'], ['나중에', 'Later'],

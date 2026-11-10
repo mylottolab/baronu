@@ -323,7 +323,10 @@ NU.welcome = function(box, lead){
     '<button class="nu-btn" type="button" id="nuAnonGo">가입 없이 바로 시작</button>' +
     '<a class="nu-btn line" href="nureum_join.html">받은 코드 · QR로 바로 연결</a>' +
     '<a class="nu-btn ghost" href="' + NU.loginUrl(false) + '">계정이 있어요 · 로그인</a>' +
-    '<div id="nuAnonErr" class="nu-err" role="alert"></div>';
+    '<div id="nuAnonErr" class="nu-err" role="alert"></div>' +
+    (NU.isApp() ? '' : '<div style="display:flex;gap:10px">' +
+      '<a class="nu-btn line" href="https://play.google.com/store/apps/details?id=com.weaveapp.baronu" target="_blank" rel="noopener" style="flex:1;font-size:15px">▶ 안드로이드 앱 받기</a>' +
+      '<a class="nu-btn line" href="https://apps.apple.com/kr/app/id6830149213" target="_blank" rel="noopener" style="flex:1;font-size:15px">📱 아이폰 앱 받기</a></div>');
   box.querySelector('#nuAnonGo').onclick = async function(){
     this.disabled = true;
     try { await NU.startAnon(); location.reload(); }
