@@ -102,6 +102,12 @@ const NUREUM_SKUS: Record<string, { kind: string; krw: number }> = {
 
 /* 🔴 2026-10-11 — 애플 결제를 기록할 때 쓰는 이름(payments.method · storage_packs.source) */
 const APPLE_METHOD = 'app_store';
+/* 🔴 2026-11-14 — 안심 긴급(SOS) 이용권. 화면(sos.js SOS.SKU) · Play Console · App Store Connect 와 **같아야** 합니다(소모성).
+   부름 앱: sos_1m · sos_12m / 바로너 앱: baronu_sos_1m · baronu_sos_12m */
+const SOS_SKUS: Record<string, { months: number; krw: number }> = {
+  sos_1m: { months: 1, krw: 1100 }, sos_12m: { months: 12, krw: 9900 },
+  baronu_sos_1m: { months: 1, krw: 1100 }, baronu_sos_12m: { months: 12, krw: 9900 },
+};
 
 const supabase = createClient(
   Deno.env.get('SUPABASE_URL')!,
@@ -487,6 +493,44 @@ async function handleNureum(userId: string, productId: string, purchaseToken: st
   return okJson({ ok: true, nureum: true, line_id: lineId, kind: item.kind, qty, until: ap.plan_until || null });
 }
 
+/* ── 🔴 2026-11-14 안심 긴급(SOS) 이용권 ─────────────────────────────
+   영수증 하나 = 이용자 계정의 「안심 긴급」 기간 N개월(수량만큼). 같은 영수증은 한 번만. */
+async function handleSos(userId: string, productId: string, purchaseToken: string, orderId: string | null) {
+  const item = SOS_SKUS[productId];
+  const { data: dup } = await supabase.from('payments').select('id, status').eq('external_payment_id', purchaseToken).maybeSingle();
+  if (dup && dup.status === 'completed') return okJson({ ok: true, already: true, sos: true });
+
+  const { res, info, url, token } = await askStore(productId, purchaseToken, userId);
+  if (res.status === 410) return cancelledReply(productId, '410');
+  if (!res.ok) return bad('스토어가 영수증을 확인해 주지 않았습니다: ' + JSON.stringify(info).slice(0, 300));
+  if (info.purchaseState === 1) return cancelledReply(productId, 'state 1');
+  if (info.purchaseState !== 0) return bad('아직 결제가 끝나지 않았습니다 (상태 ' + info.purchaseState + ')');
+  let qty = Number(info.quantity);
+  if (!Number.isFinite(qty) || qty < 1) qty = 1;
+  qty = Math.min(Math.floor(qty), 10);
+
+  /* 결제 기록을 먼저(같은 영수증이 동시에 두 번 오면 두 번째는 여기서 막힘) */
+  const { error: payErr } = await supabase.from('payments').insert({
+    user_id: userId, method: isApple(purchaseToken) ? APPLE_METHOD : 'google_play', external_payment_id: purchaseToken,
+    amount_minor_units: item.krw * qty, currency_code: 'KRW', status: 'completed', purpose: 'sos',
+    google_product_id: productId, completed_at: new Date().toISOString(),
+  });
+  if (payErr) {
+    if (String(payErr.code) === '23505') return okJson({ ok: true, already: true, sos: true });
+    console.error('[google-verify] 🔴 안심 긴급 결제 기록 실패:', JSON.stringify(payErr));
+    return bad('결제를 기록하지 못했습니다. 잠시 뒤 앱을 다시 열어주세요.', 500);
+  }
+  const { data: until, error: exErr } = await supabase.rpc('sos_extend_for_user', { p_user: userId, p_months: item.months * qty });
+  if (exErr) {
+    console.error('[google-verify] 🔴 안심 긴급 기간을 못 넣었습니다 — 돈은 받았습니다:', userId, JSON.stringify(exErr));
+    await supabase.from('payments').update({ status: 'pending' }).eq('external_payment_id', purchaseToken);
+    return bad('기간을 넣지 못했습니다. 잠시 뒤 앱을 다시 열어주세요.', 500);
+  }
+  await acknowledge(info, url, token);
+  console.log('[google-verify] ✓ 안심 긴급 ' + (item.months * qty) + '개월:', userId, orderId || '');
+  return okJson({ ok: true, sos: true, months: item.months * qty, until });
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
 
@@ -507,6 +551,11 @@ Deno.serve(async (req) => {
        같은 결제를 "다른 영수증" 처럼 여러 번 쓰는 일을 막습니다(이용권 · 용량 · 번호 모두). */
     if (isApple(purchaseToken)) purchaseToken = 'apple:' + String(purchaseToken).slice(6).replace(/[^0-9]/g, '');
     if (!productId || !purchaseToken) return bad('영수증이 없습니다');
+
+    /* 🔴 2026-11-14 — 안심 긴급 */
+    if (SOS_SKUS[productId]) {
+      return await handleSos(userId, productId, purchaseToken, orderId || null);
+    }
 
     /* 🔴 2026-10-30 — 누름 */
     if (NUREUM_SKUS[productId]) {

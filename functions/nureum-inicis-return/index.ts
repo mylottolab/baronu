@@ -39,6 +39,32 @@ Deno.serve(async (req) => {
     const tid = f.get('P_AUTH_TID') as string, amt = f.get('P_AMT') as string;
     const idc = (f.get('P_IDCNAME') as string) || '';
     bn = !!oid && oid.endsWith('_BN');
+    /* 🔴 2026-11-14 — 안심 긴급(SOS) 이용권 */
+    if (oid && oid.startsWith('ALNG_SOS_')) {
+      const back = (q: string) => new Response(null, { status: 302, headers: { Location: `${bn ? BARONU : SITE}/sos.html?${q}` } });
+      const { data: p } = await supabase.from('payments').select('id, user_id, amount_minor_units, status').eq('external_payment_id', oid).maybeSingle();
+      if (!p) return back('pay=fail');
+      if (st !== '00') return back('pay=fail&msg=' + encodeURIComponent(msg));
+      if (p.status === 'completed') return back('pay=ok');
+      if (String(p.amount_minor_units) !== String(amt)) {
+        console.error('[nureum-inicis-return] 🔴 안심 긴급 금액이 다릅니다', oid, p.amount_minor_units, amt);
+        return back('pay=fail&msg=' + encodeURIComponent('금액이 맞지 않습니다'));
+      }
+      const ap = await approve(idc, mid, tid, amt);
+      if (ap.P_STATUS !== '00') {
+        await supabase.from('payments').update({ status: 'failed' }).eq('external_payment_id', oid);
+        return back('pay=fail&msg=' + encodeURIComponent(ap.P_RMESG || '승인실패'));
+      }
+      const months = Number(oid.split('_')[2]) === 12 ? 12 : 1;
+      /* 같은 주문이 두 번 와도 한 번만 — 먼저 completed 로 바꾼 쪽만 기간을 늘립니다 */
+      const { data: upd } = await supabase.from('payments').update({ status: 'completed', completed_at: new Date().toISOString() })
+        .eq('external_payment_id', oid).neq('status', 'completed').select('id');
+      if (upd && upd.length) {
+        const { error } = await supabase.rpc('sos_extend_for_user', { p_user: p.user_id, p_months: months });
+        if (error) console.error('[nureum-inicis-return] 🔴 안심 긴급 기간을 못 넣었습니다 — 돈은 받았습니다:', oid, JSON.stringify(error));
+      }
+      return back('pay=ok');
+    }
     if (!oid || !oid.startsWith('ALNG_NU_')) return go(null, 'pay=fail', bn);
 
     const { data: o } = await supabase.from('nureum_orders').select('*').eq('oid', oid).maybeSingle();
