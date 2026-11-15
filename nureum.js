@@ -486,6 +486,7 @@ NU.meSheet = async function(){
     '<div id="prBox" style="margin-top:6px"></div>' +
     '<a class="nu-btn ghost" href="terms.html" style="margin-top:8px">이용약관 · 개인정보 · 환불</a>' +
     '<a class="nu-btn ghost" href="support.html" style="margin-top:8px">💬 고객센터 · 문의하기</a>' +   // 🔴 2026-11-15
+    '<a class="nu-btn ghost" href="dangol.html" style="margin-top:8px">🏪 단골창구 — 가게에 묻기</a>' +
     '<button class="nu-btn ghost" id="mOut" type="button" style="margin-top:8px">로그아웃</button>' +
     '<button class="nu-btn ghost" data-close type="button" style="margin-top:8px">닫기</button>' +
     '<button id="mDel" type="button" style="margin-top:14px;background:none;border:none;color:var(--nu-sub);font:inherit;font-size:13.5px;text-decoration:underline;cursor:pointer;padding:8px">회원 탈퇴 (계정 지우기)</button>');
