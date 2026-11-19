@@ -151,6 +151,8 @@ async function sendOne(projectId: string, accessToken: string, token: string, pa
 const IOS_BUNDLE = 'com.weaveapp.alias';
 /* 🔴 2026-11-03 — 바로너 앱(com.weaveapp.baronu)도 같은 서버를 씁니다. 애플이 "다른 앱 번호"(DeviceTokenNotForTopic)라 하면 바로너 앱 번호로 한 번 더 */
 const ALT_BUNDLE = 'com.weaveapp.baronu';
+/* 🔴 2026-11-19 — 와파 WAFA 앱(com.weaveapp.wafa)도 같은 서버를 씁니다. 바로너 번호도 아니면 와파 앱 번호로 한 번 더 */
+const WAFA_BUNDLE = 'com.weaveapp.wafa';
 
 /* 아이폰 "전화용 기기 번호" 는 16진수 64자입니다. Firebase 번호는 ':' 가 들어 있어 구별됩니다. */
 function isVoipToken(r: any): boolean {
@@ -227,6 +229,9 @@ async function sendVoip(jwt: string, token: string, data: any, sandbox = false, 
     }
     if (res.status === 400 && out && out.reason === 'DeviceTokenNotForTopic' && topic === IOS_BUNDLE) {
       return await sendVoip(jwt, token, data, sandbox, ALT_BUNDLE);
+    }
+    if (res.status === 400 && out && out.reason === 'DeviceTokenNotForTopic' && topic === ALT_BUNDLE) {
+      return await sendVoip(jwt, token, data, sandbox, WAFA_BUNDLE);
     }
   }
   return { ok: res.ok, status: res.status, out: out };
