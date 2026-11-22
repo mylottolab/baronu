@@ -199,10 +199,12 @@ NU.pin = async function(line){
   var url = location.origin + location.pathname.replace(/[^/]*$/, '') + 'nureum_line.html?line=' + line.id;
   if (window.AliasNative && typeof AliasNative.pinShortcut === 'function') {
     try {
-      var ok = AliasNative.pinShortcut(JSON.stringify({
-        id: 'nureum_' + line.id, name: line.name, url: 'https://baronu.kr/nureum_line.html?line=' + line.id,
-        icon: iconUrl.split(',')[1],
-      }));
+      /* 🔴 2026-11-23 안드로이드 바로너 앱(부름 앱 바탕)은 주소에서 「https://burum.kr/」 를 떼고 라인 화면을 찾습니다.
+         baronu.kr 주소를 주면 못 찾아 아이콘을 놓지 않았습니다(추가 창이 안 뜸). 앱은 화면 이름만 쓰고 자기 사이트(baronu.kr)로 엽니다.
+         → baronu.kr 로 먼저, 안 되면 burum.kr 꼴로 한 번 더. */
+      var pinArg = function(host){ return JSON.stringify({ id: 'nureum_' + line.id, name: line.name, url: 'https://' + host + '/nureum_line.html?line=' + line.id, icon: iconUrl.split(',')[1] }); };
+      var ok = AliasNative.pinShortcut(pinArg('baronu.kr'));
+      if (ok === false) ok = AliasNative.pinShortcut(pinArg('burum.kr'));
       if (ok !== false) {
         /* 🔴 v27 앱 — 위젯으로 놓았는지, 바로가기로 놓았는지(바로너 표시 붙음) 알려 줍니다 */
         var kind = '';
