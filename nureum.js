@@ -503,6 +503,17 @@ NU.meSheet = async function(){
   };
   var bp = sh.querySelector('#mProtect');
   if (bp) bp.onclick = function(){ NU.protect(); };
+  /* ☎ 2026-11-22 앱을 열면 — 다이얼 첫 화면 / 목록(본화면) 바로 (이 폰에만) */
+  (function(){
+    var key = 'baronu_home_mode', cur = 'classic';
+    try { cur = localStorage.getItem(key) || (localStorage.getItem('baronu_home_active') === '1' ? 'dial' : (window.BARONU_HOME_ALL || 'classic')); } catch (e) {}
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'nu-btn ghost'; b.style.marginTop = '8px';
+    b.textContent = cur === 'dial' ? '앱을 열면: ☎ 다이얼 ✓ (목록부터로 바꾸기)' : '앱을 열면 ☎ 다이얼부터 보기';
+    b.onclick = function(){ var to = cur === 'dial' ? 'classic' : 'dial';
+      try { localStorage.setItem(key, to); localStorage.setItem('baronu_home_active', to === 'dial' ? '1' : '0'); } catch (e) {}
+      location.href = to === 'dial' ? 'nureum_home_dial.html' : 'index.html?list=1'; };
+    var mo = sh.querySelector('#mOut'); mo.parentNode.insertBefore(b, mo);
+  })();
   sh.querySelector('#mOut').onclick = function(){ NU.logout(u); };
 };
 

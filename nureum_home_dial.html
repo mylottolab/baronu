@@ -14,9 +14,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="alias_common.js?v=20261122a"></script>
 <script src="alias_qr.js?v=20261019a"></script>
-<script src="nureum.js?v=20261115b"></script>
-<script src="dialhome.js?v=20261122b"></script>
-<script src="baronu_home_mode.js?v=20261122a"></script>
+<script src="nureum.js?v=20261122a"></script>
+<script src="dialhome.js?v=20261122c"></script>
+<script src="baronu_home_mode.js?v=20261122b"></script>
 <style>
 /* ☎ 바로너 다이얼 첫 화면 (2026-11-22) — 다이얼 모양 · 돌리기는 dialhome.js(와파 · 부름 · 누름 · 바로너 공용)
    1~5번 = 내 핫라인(사람) — 돌리면 그 사람 화면(큰 [전화하기]) · 6 짝 맺기 · 7 QR 카드 찍기 · 8 안심 긴급 · 9 사용법 · 0 고객센터
@@ -48,7 +48,7 @@
   <div class="bn-ads" data-n="2"></div>
   <div class="foot">
     <a href="index.html?list=1" id="fList">👥 전체 핫라인 목록</a>
-    <button type="button" id="fClassic">↩ 예전 첫 화면으로</button>
+    <button type="button" id="fClassic" hidden></button>
   </div>
 </div>
 <script>
@@ -121,7 +121,9 @@
   var dh = DialHome.mount(document.getElementById('dial'), {
     en: false, key: 'baronu', brand: { plate:'#4A2BE0', rim:'#3720B0', ring:'#2A188A', ink:'#FFFFFF' },
     center: function(){ return { title: '바로너', sub: '숫자 = 사람' }; },
-    hint: '불러오는 중…', next: null, items: build([])
+    hint: '불러오는 중…', next: null, items: build([]),
+    centerTap: { label: '톡 = 전체 목록', go: function(){ location.href = 'index.html?list=1'; } },
+    firstScreen: function(){ document.getElementById('fClassic').click(); }
   });
   try {
     var lines = await NU.rpc('nureum_my_lines');
@@ -137,7 +139,7 @@
     NU.showErr('err', W + '을 불러오지 못했습니다. ' + (e.message || e));
     dh.update({ hint: '' });
   }
-  document.getElementById('fClassic').onclick = function(){ try { localStorage.setItem(MODEKEY, 'classic');  } catch (e) {} location.replace('index.html?list=1'); };
+  document.getElementById('fClassic').onclick = function(){ try { localStorage.setItem(MODEKEY, 'classic'); localStorage.setItem('baronu_home_active', '0'); } catch (e) {} location.replace('index.html?list=1'); };
   try { if (localStorage.getItem(MODEKEY) === 'dial' && (window.BARONU_HOME_ALL || 'classic') !== 'dial') {
     var tb = document.getElementById('trybar'); tb.hidden = false; tb.textContent = '시험 중 — 이 폰만 다이얼 첫 화면입니다'; } } catch (e) {}
 })();

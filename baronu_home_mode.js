@@ -5,9 +5,10 @@
    · 이 폰만 시험: nureum_home_dial.html?try=1 을 한 번 열기 · 다이얼 화면 아래 [예전 첫 화면으로] 로 원래대로
    ===================================================================== */
 (function(){
-  var ALL = 'classic';   // ← 전체 전환 스위치: 'classic' | 'dial'
+  var ALL = 'dial';   // 2026-11-22 개편 — 다이얼 첫 화면(되돌리려면 'classic')   // ← 전체 전환 스위치: 'classic' | 'dial'
   var m = ALL;
   try { var l = localStorage.getItem('baronu_home_mode'); if (l === 'dial' || l === 'classic') m = l; } catch (e) {}
   window.BARONU_HOME = m;
   window.BARONU_HOME_ALL = ALL;
+  try { localStorage.setItem('baronu_home_active', m === 'dial' ? '1' : '0'); } catch (e) {}
 })();
