@@ -24,6 +24,7 @@
     <div class="nu-top">
       <svg class="nu-logo" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 4c9.4 0 17 6.3 17 14.2S29.4 32.4 20 32.4c-1.6 0-3.1-.2-4.6-.5L7.6 36l1.6-7C5.5 26.4 3 22.5 3 18.2 3 10.3 10.6 4 20 4z" fill="#fff"/><text x="20" y="24" text-anchor="middle" font-size="14" font-weight="900" fill="#4A2BE0" font-family="sans-serif">너</text></svg>
       <h1>바로너</h1>
+      <a class="nu-back" id="dialBtn" href="nureum_home_dial.html" hidden style="width:auto;padding:0 12px;font-size:15px;font-weight:800;text-decoration:none;display:none;align-items:center;margin-left:auto;margin-right:8px" aria-label="다이얼 첫 화면">☎ 다이얼</a>
       <button class="nu-back" id="meBtn" type="button" aria-label="나 (설정)" title="나 (설정)" style="font-size:15px;font-weight:800">⚙ 나</button>
     </div>
     <p class="nu-sub">정한 한 사람과 바로 통하는 나만의 핫라인.<br>전화 · 영상 · 문자 · 사진, 서로 전화번호는 보이지 않아요.</p>
@@ -58,6 +59,8 @@
 
 <script>
 document.getElementById('meBtn').onclick = function(){ NU.meSheet(); };
+/* ☎ 2026-11-22 다이얼 첫 화면을 쓰는 폰이면 위쪽에 [☎ 다이얼] — 목록에서 다이얼로 돌아가기 */
+(function(){ try { if (window.BARONU_HOME !== 'dial') return; var d = document.getElementById('dialBtn'); d.hidden = false; d.style.display = 'inline-flex'; } catch (e) {} })();
 try { if (NU.isApp()) document.getElementById('storeRow').style.display = 'none'; } catch (e) {}
 /* 🔴 2026-11-01 — 냉장고 · 지갑 QR 카드 찍기 → 그 사람 화면 (짝 맺기 QR이면 짝 맺기로) */
 document.getElementById('scanCard').onclick = async function(){
