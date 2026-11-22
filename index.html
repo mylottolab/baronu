@@ -15,6 +15,7 @@
 <script src="alias_qr.js?v=20261019a"></script>
 <script src="nureum.js?v=20261115b"></script>
 <script src="baronu_ads.js?v=20261103b" defer></script>
+<script src="baronu_home_mode.js?v=20261122a"></script>
 </head>
 <body>
 <!-- 바로너 첫 화면: 내 핫라인들. 핫라인 아이콘을 누르면 그 핫라인 화면, + 를 누르면 새 핫라인 -->
@@ -86,7 +87,7 @@ document.addEventListener('click', function(){ try { sessionStorage.setItem('bur
   try {
     var lines = await NU.rpc('nureum_my_lines');
     NU.syncWidget(lines);   // 🔴 아이폰 위젯 목록 새로(끊긴 핫라인 빼기)
-    if (!lines.length) { document.getElementById('empty').classList.remove('nu-hidden'); return; }
+    if (!lines.length) { if (window.BARONU_HOME === 'dial' && !NU.q('list')) { location.replace('nureum_home_dial.html'); return; } document.getElementById('empty').classList.remove('nu-hidden'); return; }
     /* 🔴 2026-11-03 — 앱 아이콘을 누르면 목록 대신 바로 "그 사람 전화 화면".
        [앱을 열면 이 사람부터]로 고른 사람, 없으면 짝 맺은 핫라인이 하나뿐일 때 그 사람. 앱을 켤 때 한 번만. */
     try {
@@ -100,6 +101,8 @@ document.addEventListener('click', function(){ try { sessionStorage.setItem('bur
         if (t) { location.replace('nureum_line.html?line=' + t.id); return; }
       }
     } catch (e) {}
+    /* ☎ 2026-11-22 다이얼 첫 화면(baronu_home_mode.js 스위치 · 이 폰의 선택) — [전체 핫라인 목록]은 ?list=1 로 와서 그대로 */
+    if (window.BARONU_HOME === 'dial' && !NU.q('list')) { location.replace('nureum_home_dial.html'); return; }
     grid.innerHTML = lines.map(function(l){
       var state = !l.link_id ? '짝 기다리는 중' : (!l.active ? (l.is_owner ? '이용권 필요' : '연장 필요') : '');
       var href = !l.link_id ? 'nureum_new.html?line=' + l.id : 'nureum_line.html?line=' + l.id;
