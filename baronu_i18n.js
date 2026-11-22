@@ -198,6 +198,8 @@
     ['알겠어요', 'Got it'], ['로그아웃', 'Log out'], ['로그인', 'Sign in'], ['갤러리', 'Photos'], ['사진', 'Photos'], ['음성통화', 'Voice'],
     ['이번 달', 'This month'], ['색', 'Color'], ['계정', 'Account'], ['상대', 'Them'], ['핫라인', 'hotline'], ['바로너', 'Baronu'], ['⚙ 나', '⚙ Me'], ['나 (설정)', 'Me (settings)'],
     /* ☎ 2026-11-22 다이얼 첫 화면 */
+    ['꾸욱 눌러 첫 화면 원하는 자리로 옮기세요.', 'Press and hold it to move it where you want on your first screen.'], ['새로 놓인 것은 첫 화면이 아닌 곳에 생길 수 있어요.', 'A newly added one may land somewhere other than your first screen.'],
+    ['핫라인마다 바탕화면 아이콘(아이폰 위젯), 생긴 아이콘은 꾸욱 눌러 첫 화면 원하는 자리로 옮기기(자리는 휴대폰이 정해 첫 화면이 아닐 수 있음)', 'A home-screen icon (iPhone widget) per hotline; press and hold to move it where you want (the phone picks the spot, which may not be your first screen)'],
     ['전체 기능 소개', 'All features'], ['☎ 다이얼 첫 화면으로', '☎ Back to dial home'], ['다이얼 첫 화면', 'Dial home'],
     ['5번째부터는 목록에서', 'From the 5th, use the list'],
     ['핫라인이 5개보다 많아요. 목록에서 고르세요.', 'You have more than 5 hotlines. Pick from the list.'],
