@@ -198,6 +198,7 @@
     ['알겠어요', 'Got it'], ['로그아웃', 'Log out'], ['로그인', 'Sign in'], ['갤러리', 'Photos'], ['사진', 'Photos'], ['음성통화', 'Voice'],
     ['이번 달', 'This month'], ['색', 'Color'], ['계정', 'Account'], ['상대', 'Them'], ['핫라인', 'hotline'], ['바로너', 'Baronu'], ['⚙ 나', '⚙ Me'], ['나 (설정)', 'Me (settings)'],
     /* ☎ 2026-11-22 다이얼 첫 화면 */
+    ['인사 영상 (상대 화면에 나와요)', 'Greeting video (shows on their screen)'],
     ['카드가 아직 없으면: 그 사람 화면 → [전체 메뉴] → 🖨 QR 카드 만들기', 'No card yet? Open that person’s screen → [Full menu] → 🖨 Make QR card'],
     ['카드 그림을 만드는 중…', 'Making the card image…'], ['카드 그림을 만들지 못했어요. 잠시 뒤 다시 눌러 주세요.', 'Couldn’t make the card image. Please try again shortly.'], ['눌러 사진에 저장한 뒤, 사진 앱의 공유 →', ' to save it to Photos, then in Photos tap Share →'], ['로 인쇄하세요.', ' to print it.'], ['카드 그림', 'Card image'],
     ['꾸욱 눌러 첫 화면 원하는 자리로 옮기세요.', 'Press and hold it to move it where you want on your first screen.'], ['새로 놓인 것은 첫 화면이 아닌 곳에 생길 수 있어요.', 'A newly added one may land somewhere other than your first screen.'],
