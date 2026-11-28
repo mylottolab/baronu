@@ -879,6 +879,8 @@ async function handleSignal(m){
 
      ⚠ 여기서는 전달만 합니다. 판단은 화면이 합니다.
      ⚠ 통화가 붙은 뒤에만 오갑니다. 채널이 살아 있어야 하니까요. */
+  /* 🔴 2026-11-28 AI 통역 — 상대가 통역을 켰다 / 껐다 */
+  if (m.kind === 'interp') { say('interp', m); return; }
   if (m.kind.indexOf('rec-') === 0) {
     console.log('[rec] 신호:', m.kind);
     say('rec', { kind: m.kind, days: m.days, who: m.who });
@@ -1256,6 +1258,7 @@ function stopStats(){
 }
 
 function cleanup(){
+  try { if (window.WI && WI.active) WI.stop('call_end'); if (window.WI) { WI.peerOn = null; WI.caption && WI.caption('clear'); } } catch (e) {}   // 🔴 2026-11-28 AI 통역
   stopStats();
   stopIceQueue();
   AL.call.myCands = null;
